@@ -31,7 +31,8 @@ export default class SessionDetail extends Component {
 
   getDetails = (id = this.props.id) => {
     axios
-      .get(`https://rec-scheduler-api.herokuapp.com/${id}`)
+      .get(`http://localhost:4000/${id}`)
+      // .get(`https://rec-scheduler-api.herokuapp.com/${id}`)
       .then(res => {
         this.setState({
           single_session: res.data

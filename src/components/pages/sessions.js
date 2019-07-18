@@ -56,7 +56,8 @@ export default class Sessions extends Component {
 
   getSessions(filter = "sessions") {
     axios
-      .get("https://rec-scheduler-api.herokuapp.com/sessions")
+      .get("http://localhost:4000/sessions")
+      // .get("https://rec-scheduler-api.herokuapp.com/sessions")
       .then(res => {
         if (filter === "sessions") {
           this.setState({

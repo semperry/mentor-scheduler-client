@@ -18,7 +18,8 @@ export default class NewSessionForm extends Component {
 
   getStudents = () => {
     axios
-      .get("https://rec-scheduler-api.herokuapp.com/sessions")
+      .get("http://localhost:4000/sessions")
+      // .get("https://rec-scheduler-api.herokuapp.com/sessions")
       .then(res => {
         this.setState({
           students: [...res.data]
@@ -63,7 +64,8 @@ export default class NewSessionForm extends Component {
     e.preventDefault();
 
     axios
-      .post("https://rec-scheduler-api.herokuapp.com/new", newSession)
+      .post("http://localhost:4000/new", newSession)
+      // .post("https://rec-scheduler-api.herokuapp.com/new", newSession)
       .then(res => {
         this.getStudents();
       })
