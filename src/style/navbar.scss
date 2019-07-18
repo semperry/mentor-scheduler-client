@@ -1,0 +1,39 @@
+.navigation-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 4fr 1fr;
+  width: 100vw;
+  padding: 21px;
+  align-items: center;
+  box-shadow: 8px 8px 30px 3px rgba(0, 0, 0, 0.4);
+  margin-bottom: 42px;
+
+  .nav-links-wrapper {
+    display: grid;
+    align-items: center;
+    grid-template-columns: 80px 100px 130px 100px;
+
+    a {
+      font-size: 1.5em;
+      font-family: "Ubuntu", sans-serif;
+      font-weight: 700;
+
+      &:hover {
+        color: #00643c;
+      }
+    }
+  }
+
+  .sign-out-nav-link {
+    width: 80%;
+    text-align: right;
+    a {
+      font-size: 1.5em;
+      font-family: "Ubuntu", sans-serif;
+      font-weight: 700;
+
+      &:hover {
+        color: #00643c;
+      }
+    }
+  }
+}

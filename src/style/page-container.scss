@@ -1,0 +1,83 @@
+.container {
+  padding: 0px 50px;
+  display: grid;
+  grid-template-columns: 1fr;
+
+  .grid-500-1fr {
+    display: grid;
+    grid-template-columns: 500px 1fr;
+
+    .task-wrapper {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .scroll-box {
+      height: calc(100vh - 300px) !important;
+      overflow: scroll;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      border-radius: 7px;
+
+      .ticket-sidebar-wrapper {
+        padding: 0px 42px;
+
+        .underlined-header {
+          font-family: "Ubuntu", sans-serif;
+          font-weight: 700;
+          font-size: 2em;
+          width: 100%;
+          padding-bottom: 21px;
+          border-bottom: 2px solid #00c274;
+          color: #00c274;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        &__items-wrapper {
+          &__item {
+            border-radius: 7px;
+            transition: 0.5s ease-in-out;
+            cursor: pointer;
+            width: calc(100% - 40px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+
+            &:hover {
+              box-shadow: 8px 8px 30px 3px rgba(0, 0, 0, 0.4);
+            }
+
+            &__left {
+              display: flex;
+              align-items: center;
+
+              img {
+                border: 100px;
+                width: 50px;
+                height: 50px;
+              }
+
+              &__title {
+                font-weight: 700;
+                color: #00c274;
+                font-size: 1.5em;
+                margin-left: 15px;
+                max-width: 300px;
+              }
+            }
+
+            &__timestamp {
+              font-weight: 900;
+              font-size: 2em;
+              display: flex;
+              align-items: center;
+            }
+          }
+        }
+      }
+    }
+  }
+}

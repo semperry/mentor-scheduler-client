@@ -1,0 +1,51 @@
+html {
+  font-size: 62.5%; // 1rem is 10px
+}
+
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+  font-family: "montserrat";
+}
+
+body {
+  overflow-x: hidden;
+  font-weight: normal;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.app {
+  display: grid;
+  justify-items: center;
+}
+
+a {
+  color: #00c274;
+  text-decoration: none;
+  cursor: pointer;
+  transition: 0.5s ease-in-out;
+}
+
+button {
+  flex: 1 1 0%;
+  padding: 21px; 
+  border: none; 
+  background-color: transparent; 
+  font-size: 1.5rem; 
+  outline: none; 
+  font-weight: 900;
+  text-transform: uppercase; 
+  color: rgb(0, 194, 116); 
+  cursor: pointer;
+}
+
+select {
+  width: 100px;
+}
