@@ -1,24 +1,35 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import { withRouter } from "react-router";
 
-export default class NavBar extends Component {
-  constructor(){
-    super();
+class NavBar extends Component {
+  constructor(props) {
+    super(props);
   }
+
+  handleSuccessfulLogout = () => {
+    this.props.handleSuccessfulLogout();
+    this.props.history.push("/login");
+  };
 
   render() {
-    return(
-    <div className="navigation-wrapper">
-      <div className="nav-links-wrapper">
-        <Link to="/">Logo</Link>
-        <Link to="/sessions">Sessions</Link>
-        <Link to="/new-session">New Session</Link>
+    console.log("logged in status: ", this.props.loggedInStatus);
+    return (
+      <div className="navigation-wrapper">
+        <div className="nav-links-wrapper">
+          <Link to="/">Logo</Link>
+          <Link to="/sessions">Sessions</Link>
+          <Link to="/new-session">New Session</Link>
+        </div>
+        <div className="navigation-search-form-wrapper" />
+        {this.props.loggedInStatus === "LOGGED_IN" ? (
+          <div className="sign-out-nav-link">
+            <a onClick={this.handleSuccessfulLogout}>Logout Icon</a>
+          </div>
+        ) : null}
       </div>
-      <div className="navigation-search-form-wrapper"></div>
-      <div className="sign-out-nav-link">
-        <Link to="/logout">Logout Icon</Link>
-    </div>
-    </div>
-    )
+    );
   }
 }
+
+export default withRouter(NavBar);

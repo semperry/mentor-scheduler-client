@@ -1,5 +1,8 @@
 .form-group {
   margin-bottom: 25px;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
 
   .text-field {
     border-top: 2px solid transparent;
@@ -14,6 +17,10 @@
     background-color: transparent;
     border-radius: 3px;
     margin-bottom: 5px;
+  }
+  .select-mentor {
+    margin-top: 25px;
+    width: 15%;
   }
   .form-group label {
     color: #333333;
@@ -36,7 +43,7 @@
     padding: 12px;
     background-color: transparent;
     border-radius: 3px;
-    height: 500px;
+    height: 200px;
     margin-top: 20px;
     margin-bottom: 5px;
     border: 2px solid #00c274;
@@ -50,8 +57,22 @@
   align-items: center;
   padding: 15px;
   .btn-primary {
+    margin-right: 15px;
     background-color: #00c274;
     border: 1px solid #00c274;
+    color: #f0f0f0;
+    font-weight: 900;
+    font-size: 1.6em;
+    padding: 6px 12px;
+    border-radius: 3px;
+    transition: 0.5s ease-in-out;
+    outline: none;
+    cursor: pointer;
+  }
+  .btn-cancel {
+    background: red;
+    border: 1px solid red;
+    border-radius: 3px;
     color: #f0f0f0;
     font-weight: 900;
     font-size: 1.6em;

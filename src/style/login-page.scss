@@ -1,0 +1,53 @@
+.homepage-wrapper {
+  width: 100vw !important;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 100vh;
+
+  .video-container {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background-image: url("../../static/assets/images/login.jpg");
+    background-size: cover;
+    background-position: center;
+  }
+
+  .sign-in-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .content {
+      width: 450px;
+      .headline {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        font-size: 3em;
+        color: #00c274;
+        margin-bottom: 50px;
+        .logo {
+          width: 130px;
+          margin-right: 25px;
+          color: black;
+          font-weight: 900;
+        }
+      }
+      .subtitle {
+        font-family: "Ubuntu", sans-serif;
+        width: 100%;
+        text-align: center;
+        font-size: 1.8em;
+        color: #333333;
+        font-weight: 900;
+        text-transform: uppercase;
+        margin-bottom: 50px;
+      }
+    }
+    .grid-1 {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+  }
+}

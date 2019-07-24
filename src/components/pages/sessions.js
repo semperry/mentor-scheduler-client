@@ -1,22 +1,18 @@
 // TODO: Login Page
+// TODO: Admin panel needs to be able to add mentors and flag admin or not
 // TODO: Individual Session route
-// TODO: Dropdowns for new session form
-// TODO: Filter by Day of Week
 // TODO: Logo
 // TODO: Logout icon
 // TODO: Admin (authorized) routes
-// ability to assign
 // TODO: completed ticket routes
-// TODO: check against current date
 // TODO: reset booleans after day ends
-// TODO: look into adding a redis system
-// Style buttons
+// TODO: redis system
 // Integrate Mentor schedule to mass assign
 // List of mentors. take _id, pass in to modal, pull daily session, click to add
 import React, { Component } from "react";
 import axios from "axios";
+import moment from "moment";
 
-import ScrollContainer from "../container/scrollBox";
 import SessionCard from "../container/sessionCard";
 import SessionDetail from "../container/sessionDetails";
 
@@ -25,18 +21,16 @@ export default class Sessions extends Component {
     super(props);
 
     this.state = {
-      sessions: "",
+      mentors: [],
+      single_session: [],
       current_id: "",
       current_filter: "",
-      filtered_sessions: []
+      filtered_sessions: [],
+      current_day: moment()
+        .format("dddd")
+        .toLowerCase()
     };
   }
-
-  handleClearSession = () => {
-    this.setState({
-      single_session: []
-    });
-  };
 
   clearId = () => {
     this.setState({
@@ -51,30 +45,51 @@ export default class Sessions extends Component {
   };
 
   handleFilter = filter => {
-    this.getSessions(filter);
+    if (filter === "mentors") {
+      this.getMentors();
+    } else {
+      this.getSessions(filter);
+    }
+  };
+
+  getMentors = () => {
+    axios
+      .get("http://localhost:4000/mentors")
+      .then(res => {
+        this.setState({
+          mentors: res.data
+        });
+      })
+      .catch(err => {
+        console.log("getMentors: ", err);
+      });
   };
 
   getSessions(filter = "sessions") {
     axios
-      .get("http://localhost:4000/sessions")
-      // .get("https://rec-scheduler-api.herokuapp.com/sessions")
+      .get("http://localhost:4000/students")
+      // .get("https://rec-scheduler-api.herokuapp.com/students")
       .then(res => {
         if (filter === "sessions") {
           this.setState({
-            filtered_sessions: res.data.filter(session => {
-              return session.assigned === false && session.completed === false;
+            filtered_sessions: res.data.filter(student => {
+              return (
+                student.assigned_to === "" &&
+                student.completed === false &&
+                student.day.toLowerCase() == this.state.current_day
+              );
             })
           });
         } else if (filter === "assigned") {
           this.setState({
-            filtered_sessions: res.data.filter(session => {
-              return session.assigned === true && session.completed === false;
+            filtered_sessions: res.data.filter(student => {
+              return student.assigned_to !== "" && student.completed === false;
             })
           });
         } else if (filter === "completed") {
           this.setState({
-            filtered_sessions: res.data.filter(session => {
-              return session.completed === true;
+            filtered_sessions: res.data.filter(student => {
+              return student.completed === true;
             })
           });
         }
@@ -104,12 +119,7 @@ export default class Sessions extends Component {
                 Completed
               </button>
             </div>
-            {/* <ScrollContainer
-              clearId={this.clearId}
-              setId={this.setId}
-              sessions={this.state.filtered_sessions}
-              id={this.state.current_id}
-            /> */}
+
             <div className="scroll-box">
               {this.state.filtered_sessions.length > 0 ? (
                 this.state.filtered_sessions.map(session => {
@@ -133,6 +143,7 @@ export default class Sessions extends Component {
               id={this.state.current_id}
               clearId={this.clearId}
               setId={this.setId}
+              students={this.state.filtered_sessions}
             />
           ) : null}
         </div>

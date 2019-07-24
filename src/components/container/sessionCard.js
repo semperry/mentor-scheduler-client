@@ -21,9 +21,14 @@ export default class SessionCard extends Component {
         onClick={() => this.setId(session._id)}
       >
         <div className="ticket-sidebar-wrapper__items-wrapper__item__left">
-          image
+          {session.day
+            .split("")
+            .splice(0, 3)
+            .join("")
+            .toUpperCase()}
+
           <div className="ticket-sidebar-wrapper__items-wrapper__item__left__title">
-            {session.name}
+            {session.first_name + " " + session.last_name}
           </div>
         </div>
         <div className="ticket-sidebar-wrapper__items-wrapper__item__timestamp">
