@@ -23,9 +23,9 @@ class Login extends Component {
     this.props.handleUnsuccessfulLogin();
   };
 
-  handleSessionMatch = email => {
-    this.props.handleSessionMatch(email);
-  };
+  // handleSessionMatch = email => {
+  //   this.props.handleSessionMatch(email);
+  // };
 
   render() {
     return (
@@ -35,8 +35,8 @@ class Login extends Component {
           handleSuccessfulLogin={this.handleSuccessfulLogin}
           handleUnsuccessfulLogin={this.handleUnsuccessfulLogin}
           handleCurrentUser={this.handleCurrentUser}
-          handleSessionMatch={this.handleSessionMatch}
           errorText={this.props.errorText}
+          // handleSessionMatch={this.handleSessionMatch}
         />
       </div>
     );

@@ -5,12 +5,22 @@ import { withRouter } from "react-router";
 class NavBar extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      loggedInStatus: ""
+    };
   }
 
   handleSuccessfulLogout = () => {
     this.props.handleSuccessfulLogout();
     this.props.history.push("/login");
   };
+
+  componentDidMount() {
+    this.setState({
+      loggedInStatus: this.props.loggedInStatus
+    });
+  }
 
   render() {
     console.log("logged in status: ", this.props.loggedInStatus);

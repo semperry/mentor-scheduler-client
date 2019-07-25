@@ -1,17 +1,19 @@
 // TODO: assign handler
+// TODO: on complete, attach date: update student model to reflect.
 import React, { Component } from "react";
 import axios from "axios";
-import Sessions from "../pages/sessions";
 
 export default class SessionDetail extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      current_user: props.current_user,
       students: props.students,
-      mentors: ["Ben", "Makenna", "Chantay", "Ryan", "Bobby"],
-      selected_mentor: "",
+      mentors: props.mentors,
       id: props.id,
+      selected_mentor: "",
+      assign_mentor: "",
       single_session: {}
     };
   }
@@ -31,11 +33,38 @@ export default class SessionDetail extends Component {
   };
 
   handleAssign = e => {
+    const searchName = this.state.selected_mentor.split(" ");
+    const searchData = {
+      first_name: searchName[0],
+      last_name: searchName[1]
+    };
+    const studentId = this.state.id;
+    console.log(searchData);
     e.preventDefault();
-    // axios call to route to get to user selected
-    // set piece of state with res.data
-    // post handler
-    // push all data up but chage assigned to true
+
+    axios
+      .post("http://localhost:4000/mentors/search-name", searchData)
+      .then(res => {
+        axios
+          .put(`http://localhost:4000/students/assign-to/${studentId}`, {
+            assigned_to: res.data
+          })
+          .then(res => {
+            console.log(res);
+          })
+          .catch(err => {
+            console.log("put error", err);
+          });
+      })
+      .catch(err => {
+        console.log("search data err", err);
+      });
+
+    this.setState({
+      selected_mentor: ""
+    });
+
+    this.props.clearId();
   };
 
   handleCloseForm = e => {
@@ -47,13 +76,41 @@ export default class SessionDetail extends Component {
     this.filterSingleStudent();
   }
 
+  authorizedRoutes = () => {
+    const mentors = this.props.mentors.map(mentor => {
+      return mentor;
+    });
+    return (
+      <form className="form-group">
+        <select
+          required
+          className="text-field select-mentor"
+          value={this.state.selected_mentor}
+          onChange={this.handleDropDownChange}
+        >
+          <option>Select</option>
+          {mentors.map(mentor => {
+            return (
+              <option key={mentor.id}>
+                {`${mentor.first_name} ${mentor.last_name}`}
+              </option>
+            );
+          })}
+        </select>
+        <div className="button-wrapper">
+          <button className="btn-primary" onClick={this.handleAssign}>
+            Assign
+          </button>
+          <button className="btn-cancel" onClick={this.handleCloseForm}>
+            close
+          </button>
+        </div>
+      </form>
+    );
+  };
+
   render() {
-    // console.log(
-    //   "props:",
-    //   this.props.students.filter(student => {
-    //     return student._id === this.props.id;
-    //   })[0].session.time
-    // );
+    console.log("mentor assign:", this.state.assign_mentor);
     const student = this.state.single_session;
     return (
       <div>
@@ -76,30 +133,20 @@ export default class SessionDetail extends Component {
             </div>
 
             <div className="session-detail-bottom">
-              <form className="form-group">
-                <select
-                  className="text-field select-mentor"
-                  value={this.state.selected_mentor}
-                  onChange={this.handleDropDownChange}
-                >
-                  <option>Select</option>
-                  {this.state.mentors.map(mentor => {
-                    return (
-                      <option key={mentor} value={mentor}>
-                        {mentor}
-                      </option>
-                    );
-                  })}
-                </select>
-                <div className="button-wrapper">
-                  <button className="btn-primary" onClick={this.handleAssign}>
-                    Assign
-                  </button>
-                  <button className="btn-cancel" onClick={this.handleCloseForm}>
-                    close
-                  </button>
-                </div>
-              </form>
+              {this.state.current_user === "admin" ? (
+                this.authorizedRoutes()
+              ) : (
+                <form className="form-group">
+                  <div className="button-wrapper">
+                    <button
+                      className="btn-cancel"
+                      onClick={this.handleCloseForm}
+                    >
+                      close
+                    </button>
+                  </div>
+                </form>
+              )}
             </div>
           </div>
         ) : null}

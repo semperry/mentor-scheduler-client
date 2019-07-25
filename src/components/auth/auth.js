@@ -33,19 +33,21 @@ export default class Auth extends Component {
           this.props.handleCurrentUser(res.data);
           this.props.handleSuccessfulLogin();
           Cookie.set("sesh", res.data.id + loginData.email, { expires: 2 });
+        } else {
+          this.props.handleUnsuccessfulLogin();
+          return;
         }
       })
       .then(() => {
-        axios
-          .post("http://localhost:4000/sessions/new", {
-            email: loginData.email,
-            session: Cookie.get("sesh")
-          })
-          .then(res => {
-            if (res.status === 200) {
-              this.props.handleSessionMatch(res.data.email);
-            }
-          });
+        axios.post("http://localhost:4000/sessions/new", {
+          email: loginData.email,
+          session: Cookie.get("sesh")
+        });
+        // .then(res => {
+        //   if (res.status === 200) {
+        //     this.props.handleSessionMatch(res.data.email);
+        //   }
+        // });
       })
       .catch(err => {
         console.log("login error: ", err);
@@ -95,6 +97,7 @@ export default class Auth extends Component {
               </button>
             </div>
           </form>
+          <div>{this.props.errorText}</div>
         </div>
       </div>
     );

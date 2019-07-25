@@ -16,19 +16,10 @@ class App extends Component {
 
     this.state = {
       loggedInStatus: "NOT_LOGGED_IN",
-      status: "",
       current_user: "",
-      email_match: ""
+      errorText: ""
     };
   }
-
-  handleSessionMatch = email => {
-    if (email === this.state.current_user.email) {
-      this.handleSuccessfulLogin();
-    } else {
-      this.handleUnsuccessfulLogin();
-    }
-  };
 
   handleCurrentUser = mentor => {
     this.setState({
@@ -38,17 +29,20 @@ class App extends Component {
 
   handleSuccessfulLogin = () => {
     this.setState({
-      loggedInStatus: "LOGGED_IN"
+      loggedInStatus: "LOGGED_IN",
+      errorText: ""
     });
   };
 
   handleUnsuccessfulLogin = () => {
     this.setState({
-      loggedInStatus: "NOT_LOGGED_IN"
+      loggedInStatus: "NOT_LOGGED_IN",
+      errorText: "Wrong Email or Password"
     });
   };
 
   handleSuccessfulLogout = () => {
+    // Write conditional to check for cookie
     axios
       .delete(`http://localhost:4000/sessions/delete/${Cookie.get("sesh")}`)
       .then(res => {
@@ -75,6 +69,7 @@ class App extends Component {
   };
 
   checkLoginStatus = () => {
+    // Finsih logic here
     if (Cookie.get("sesh") && this.state.loggedInStatus === "NOT_LOGGED_IN") {
       axios
         .get(`http://localhost:4000/sessions/${Cookie.get("sesh")}`)
@@ -109,31 +104,72 @@ class App extends Component {
         <div>
           <BrowserRouter>
             <div className="dashboard-layout-wrapper">
-              <NavBar
-                loggedInStatus={this.state.loggedInStatus}
-                handleSuccessfulLogout={this.handleSuccessfulLogout}
-              />
-              <Switch>
-                {/* {this.state.loggedInStatus === "LOGGED_IN"
-                  ? this.authorizedRoutes()
-                  : null} */}
-                <Route exact path="/" component={Home} />
-                <Route path="/sessions" component={Sessions} />
-                <Route path="/new-session" component={NewSessionForm} />
-                <Route
-                  path="/login"
-                  render={props => (
-                    <Login
-                      {...props}
-                      handleSessionMatch={this.handleSessionMatch}
-                      handleSuccessfulLogin={this.handleSuccessfulLogin}
-                      handleUnsuccessfulLogin={this.handleUnsuccessfulLogin}
-                      handleCurrentUser={this.handleCurrentUser}
-                      errorText={this.state.errorText}
-                    />
-                  )}
+              {this.state.loggedInStatus === "LOGGED_IN" ? (
+                <NavBar
+                  loggedInStatus={this.state.loggedInStatus}
+                  handleSuccessfulLogout={this.handleSuccessfulLogout}
+                  current_user={this.state.current_user}
                 />
-              </Switch>
+              ) : null}
+              {this.state.loggedInStatus === "LOGGED_IN" ? (
+                <Switch>
+                  <Route exact path="/" component={Home} />
+
+                  <Route
+                    path="/sessions"
+                    render={props => (
+                      <Sessions
+                        {...props}
+                        current_user={this.state.current_user}
+                      />
+                    )}
+                  />
+
+                  <Route path="/new-session" component={NewSessionForm} />
+
+                  <Route
+                    path="/login"
+                    render={props => (
+                      <Login
+                        {...props}
+                        handleSuccessfulLogin={this.handleSuccessfulLogin}
+                        handleUnsuccessfulLogin={this.handleUnsuccessfulLogin}
+                        handleCurrentUser={this.handleCurrentUser}
+                        errorText={this.state.errorText}
+                      />
+                    )}
+                  />
+                </Switch>
+              ) : (
+                <Switch>
+                  <Route
+                    exact
+                    path="/"
+                    render={props => (
+                      <Login
+                        {...props}
+                        handleSuccessfulLogin={this.handleSuccessfulLogin}
+                        handleUnsuccessfulLogin={this.handleUnsuccessfulLogin}
+                        handleCurrentUser={this.handleCurrentUser}
+                        errorText={this.state.errorText}
+                      />
+                    )}
+                  />
+
+                  <Route
+                    path="/login"
+                    render={props => (
+                      <Login
+                        {...props}
+                        handleSuccessfulLogin={this.handleSuccessfulLogin}
+                        handleUnsuccessfulLogin={this.handleUnsuccessfulLogin}
+                        handleCurrentUser={this.handleCurrentUser}
+                        errorText={this.state.errorText}
+                      />
+                    )}
+                  />
+                </Switch>
+              )}
             </div>
           </BrowserRouter>
         </div>

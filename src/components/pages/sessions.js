@@ -1,14 +1,12 @@
-// TODO: Login Page
-// TODO: Admin panel needs to be able to add mentors and flag admin or not
+// TODO: If assigned, assign button should become reassign
 // TODO: Individual Session route
+// TODO: Name on session link to individual sesssion for notes
 // TODO: Logo
 // TODO: Logout icon
-// TODO: Admin (authorized) routes
 // TODO: completed ticket routes
 // TODO: reset booleans after day ends
 // TODO: redis system
 // Integrate Mentor schedule to mass assign
-// List of mentors. take _id, pass in to modal, pull daily session, click to add
 import React, { Component } from "react";
 import axios from "axios";
 import moment from "moment";
@@ -22,6 +20,7 @@ export default class Sessions extends Component {
 
     this.state = {
       mentors: [],
+      current_user: props.current_user,
       single_session: [],
       current_id: "",
       current_filter: "",
@@ -45,11 +44,7 @@ export default class Sessions extends Component {
   };
 
   handleFilter = filter => {
-    if (filter === "mentors") {
-      this.getMentors();
-    } else {
-      this.getSessions(filter);
-    }
+    this.getSessions(filter);
   };
 
   getMentors = () => {
@@ -83,7 +78,11 @@ export default class Sessions extends Component {
         } else if (filter === "assigned") {
           this.setState({
             filtered_sessions: res.data.filter(student => {
-              return student.assigned_to !== "" && student.completed === false;
+              return (
+                student.assigned_to === this.state.current_user.id &&
+                student.completed === false &&
+                student.day.toLowerCase() == this.state.current_day
+              );
             })
           });
         } else if (filter === "completed") {
@@ -100,25 +99,44 @@ export default class Sessions extends Component {
   }
 
   componentDidMount() {
-    this.getSessions();
+    this.getMentors();
+    {
+      this.state.current_user.role === "admin"
+        ? this.getSessions()
+        : this.handleFilter("assigned");
+    }
   }
 
+  authorizedRoutes = () => {
+    return (
+      <div color="#00c274">
+        <button onClick={() => this.handleFilter("sessions")}>Sessions</button>
+        <button onClick={() => this.handleFilter("assigned")}>Assigned</button>
+        <button onClick={() => this.handleFilter("completed")}>
+          Completed
+        </button>
+      </div>
+    );
+  };
+
   render() {
+    console.log("filtered: ", this.state.filtered_sessions);
     return (
       <div className="container">
         <div className="grid-500-1fr">
           <div color="#00c274">
-            <div color="#00c274">
-              <button onClick={() => this.handleFilter("sessions")}>
-                Sessions
-              </button>
-              <button onClick={() => this.handleFilter("assigned")}>
-                Assigned
-              </button>
-              <button onClick={() => this.handleFilter("completed")}>
-                Completed
-              </button>
-            </div>
+            {this.state.current_user.role === "admin" ? (
+              this.authorizedRoutes()
+            ) : (
+              <div color="#00c274">
+                <button onClick={() => this.handleFilter("assigned")}>
+                  Assigned
+                </button>
+                <button onClick={() => this.handleFilter("completed")}>
+                  Completed
+                </button>
+              </div>
+            )}
 
             <div className="scroll-box">
               {this.state.filtered_sessions.length > 0 ? (
@@ -144,6 +162,9 @@ export default class Sessions extends Component {
               clearId={this.clearId}
               setId={this.setId}
               students={this.state.filtered_sessions}
+              mentors={this.state.mentors}
+              current_user={this.state.current_user.role}
+              handleFilter={this.handleFilter}
             />
           ) : null}
         </div>
