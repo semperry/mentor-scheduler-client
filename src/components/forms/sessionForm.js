@@ -1,9 +1,5 @@
-// TODO: set edit flag to select which end point to hit and which button to select
-// TODO: create separate edit form for when edit click is fired
-
 import React, { Component } from "react";
 import axios from "axios";
-
 import { times } from "../data";
 
 export default class SessionForm extends Component {
@@ -20,6 +16,11 @@ export default class SessionForm extends Component {
       special_instructions: ""
     };
   }
+
+  handleCancelEdit = e => {
+    e.preventDefault();
+    this.handleClearStudentToEdit();
+  };
 
   handleClearStudentToEdit = () => {
     this.props.clearStudentToEdit();
@@ -80,9 +81,6 @@ export default class SessionForm extends Component {
     }
   };
 
-  // Update student through api
-  // clear out student to edit prop
-  // relist students
   handleStudentUpdate = student => {
     const updatedSession = {
       first_name: this.state.first_name,
@@ -95,9 +93,21 @@ export default class SessionForm extends Component {
     };
 
     axios
-      .post(`http://localhost:4000/update-form/${student._id}`, updatedSession)
+      .put(
+        `http://localhost:4000/students/update-form/${student._id}`,
+        updatedSession
+      )
       .then(() => {
         this.handleClearStudentToEdit();
+        this.setState({
+          first_name: "",
+          last_name: "",
+          email: "",
+          phone: "",
+          day: "",
+          time: "",
+          special_instructions: ""
+        });
       })
       .then(() => {
         this.getStudents();
@@ -105,26 +115,47 @@ export default class SessionForm extends Component {
       .catch(err => {
         console.log("update error: ", err);
       });
-
-    this.setState({
-      first_name: "",
-      last_name: "",
-      email: "",
-      phone: "",
-      day: "",
-      time: "",
-      special_instructions: ""
-    });
   };
 
   handleSuccessfulFormSubmit = student => {
     this.props.handleSuccessfulFormSubmit(student);
   };
 
+  componentWillReceiveProps() {
+    if (this.props.studentToEdit !== {}) {
+      this.setState({
+        first_name: this.props.studentToEdit.first_name,
+        last_name: this.props.studentToEdit.last_name,
+        email: this.props.studentToEdit.email,
+        phone: this.props.studentToEdit.phone,
+        day: this.props.studentToEdit.day,
+        time: this.props.studentToEdit.time,
+        special_instructions: this.props.studentToEdit.special_instructions
+      });
+    } else {
+      this.setState({
+        first_name: "",
+        last_name: "",
+        email: "",
+        phone: "",
+        day: "",
+        time: "",
+        special_instructions: ""
+      });
+    }
+  }
+
   render() {
+    console.log("state from form: ", this.state);
     const student = this.state;
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form
+        onSubmit={
+          this.props.studentToEdit !== {}
+            ? this.handleSubmit
+            : this.handleStudentUpdate
+        }
+      >
         <div className="form-group">
           <input
             type="text"
@@ -134,7 +165,6 @@ export default class SessionForm extends Component {
             placeholder="First Name"
             onChange={this.handleChange}
             value={student.first_name}
-            onFocus={this.handleFocus}
           />
         </div>
 
@@ -146,8 +176,7 @@ export default class SessionForm extends Component {
             required
             placeholder="Last Name"
             onChange={this.handleChange}
-            value={student.name}
-            onFocus={this.handleFocus}
+            value={student.last_name}
           />
         </div>
 
@@ -160,7 +189,6 @@ export default class SessionForm extends Component {
             placeholder="Email"
             onChange={this.handleChange}
             value={student.email}
-            onFocus={this.handleFocus}
           />
         </div>
 
@@ -173,7 +201,6 @@ export default class SessionForm extends Component {
             placeholder="Phone"
             onChange={this.handleChange}
             value={student.phone}
-            onFocus={this.handleFocus}
           />
         </div>
         <div className="form-group">
@@ -187,12 +214,7 @@ export default class SessionForm extends Component {
         </div>
 
         <div className="form-group">
-          <select
-            value={student.day}
-            name="day"
-            onChange={this.handleChange}
-            placeholder={student.day}
-          >
+          <select value={student.day} name="day" onChange={this.handleChange}>
             <option>Select Day</option>
             <option>Sunday</option>
             <option>Monday</option>
@@ -203,12 +225,7 @@ export default class SessionForm extends Component {
             <option>Saturday</option>
           </select>
 
-          <select
-            value={student.time}
-            name="time"
-            onChange={this.handleChange}
-            placeholder={this.state.time}
-          >
+          <select value={student.time} name="time" onChange={this.handleChange}>
             <option>Time</option>
             {times.map(time => {
               return <option key={time}>{time}</option>;

@@ -7,6 +7,11 @@
     display: grid;
     grid-template-columns: 500px 1fr;
 
+    .active {
+      text-decoration: underline;
+      font-weight: bold;
+    }
+
     .task-wrapper {
       display: flex;
       justify-content: space-around;

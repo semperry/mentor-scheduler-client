@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { withRouter } from "react-router";
 
 class NavBar extends Component {
@@ -27,9 +27,9 @@ class NavBar extends Component {
     return (
       <div className="navigation-wrapper">
         <div className="nav-links-wrapper">
-          <Link to="/">Logo</Link>
-          <Link to="/sessions">Sessions</Link>
-          <Link to="/new-session">New Session</Link>
+          <NavLink to="/">Logo</NavLink>
+          <NavLink to="/sessions">Sessions</NavLink>
+          <NavLink to="/new-session">New Session</NavLink>
         </div>
         <div className="navigation-search-form-wrapper" />
         {this.props.loggedInStatus === "LOGGED_IN" ? (

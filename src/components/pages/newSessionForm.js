@@ -1,5 +1,3 @@
-// TODO: Double check routes for posting new session, model might be off
-// TODO: Fill ws with previous sesh?
 import React, { Component } from "react";
 import axios from "axios";
 

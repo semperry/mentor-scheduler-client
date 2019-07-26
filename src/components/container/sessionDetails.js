@@ -1,9 +1,8 @@
-// TODO: assign handler
-// TODO: on complete, attach date: update student model to reflect.
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 
-export default class SessionDetail extends Component {
+class SessionDetail extends Component {
   constructor(props) {
     super(props);
 
@@ -82,25 +81,42 @@ export default class SessionDetail extends Component {
     });
     return (
       <form className="form-group">
-        <select
-          required
-          className="text-field select-mentor"
-          value={this.state.selected_mentor}
-          onChange={this.handleDropDownChange}
-        >
-          <option>Select</option>
-          {mentors.map(mentor => {
-            return (
-              <option key={mentor.id}>
-                {`${mentor.first_name} ${mentor.last_name}`}
-              </option>
-            );
-          })}
-        </select>
+        {this.state.single_session.assigned_to === "" ? (
+          <select
+            required
+            className="text-field select-mentor"
+            value={this.state.selected_mentor}
+            onChange={this.handleDropDownChange}
+          >
+            <option>Select</option>
+            {mentors.map(mentor => {
+              return (
+                <option key={mentor.id}>
+                  {`${mentor.first_name} ${mentor.last_name}`}
+                </option>
+              );
+            })}
+          </select>
+        ) : null}
         <div className="button-wrapper">
-          <button className="btn-primary" onClick={this.handleAssign}>
-            Assign
-          </button>
+          {this.state.single_session.assigned_to === "" ? (
+            <button className="btn-primary" onClick={this.handleAssign}>
+              Assign
+            </button>
+          ) : (
+            <Link
+              className="btn-primary"
+              to={{
+                pathname: `/session-notes/${this.state.id}`,
+                state: {
+                  student: this.state.single_session,
+                  mentor: this.props.user_object
+                }
+              }}
+            >
+              View
+            </Link>
+          )}
           <button className="btn-cancel" onClick={this.handleCloseForm}>
             close
           </button>
@@ -109,9 +125,20 @@ export default class SessionDetail extends Component {
     );
   };
 
+  renderCompletedBy = student => {
+    let completedBy = student.info.pop();
+    console.log(completedBy);
+    return (
+      <span>
+        Submitted By: <h2>{completedBy.submitted_by}</h2>
+      </span>
+    );
+  };
+
   render() {
-    console.log("mentor assign:", this.state.assign_mentor);
     const student = this.state.single_session;
+    console.log("student: ", student.info);
+
     return (
       <div>
         {this.state.single_session !== {} ? (
@@ -138,6 +165,18 @@ export default class SessionDetail extends Component {
               ) : (
                 <form className="form-group">
                   <div className="button-wrapper">
+                    <Link
+                      className="btn-primary"
+                      to={{
+                        pathname: `/session-notes/${this.state.id}`,
+                        state: {
+                          student: this.state.single_session,
+                          mentor: this.props.user_object
+                        }
+                      }}
+                    >
+                      View
+                    </Link>
                     <button
                       className="btn-cancel"
                       onClick={this.handleCloseForm}
@@ -148,9 +187,12 @@ export default class SessionDetail extends Component {
                 </form>
               )}
             </div>
+            {student.completed ? this.renderCompletedBy(student) : null}
           </div>
         ) : null}
       </div>
     );
   }
 }
+
+export default SessionDetail;

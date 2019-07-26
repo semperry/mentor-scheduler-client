@@ -9,6 +9,7 @@ import NavBar from "./navigation/navbar";
 import Sessions from "./pages/sessions";
 import NewSessionForm from "./pages/newSessionForm";
 import Login from "./pages/login";
+import SessionNotes from "./pages/sessionNotes";
 
 class App extends Component {
   constructor(props) {
@@ -139,6 +140,8 @@ class App extends Component {
                       />
                     )}
                   />
+
+                  <Route path="/session-notes/:id" component={SessionNotes} />
                 </Switch>
               ) : (
                 <Switch>

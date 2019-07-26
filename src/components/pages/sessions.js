@@ -1,12 +1,8 @@
 // TODO: If assigned, assign button should become reassign
-// TODO: Individual Session route
-// TODO: Name on session link to individual sesssion for notes
 // TODO: Logo
 // TODO: Logout icon
-// TODO: completed ticket routes
 // TODO: reset booleans after day ends
 // TODO: redis system
-// Integrate Mentor schedule to mass assign
 import React, { Component } from "react";
 import axios from "axios";
 import moment from "moment";
@@ -164,6 +160,7 @@ export default class Sessions extends Component {
               students={this.state.filtered_sessions}
               mentors={this.state.mentors}
               current_user={this.state.current_user.role}
+              user_object={this.state.current_user}
               handleFilter={this.handleFilter}
             />
           ) : null}

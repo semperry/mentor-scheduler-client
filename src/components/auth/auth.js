@@ -1,6 +1,8 @@
+// If assigned, remove dropdown, add completed route link to individual session
 import React, { Component } from "react";
 import axios from "axios";
 import Cookie from "js-cookie";
+import uuidv1 from "uuid";
 
 export default class Auth extends Component {
   constructor(props) {
@@ -32,7 +34,7 @@ export default class Auth extends Component {
         if (res.status === 200) {
           this.props.handleCurrentUser(res.data);
           this.props.handleSuccessfulLogin();
-          Cookie.set("sesh", res.data.id + loginData.email, { expires: 2 });
+          Cookie.set("sesh", res.data.id + uuidv1(), { expires: 7 });
         } else {
           this.props.handleUnsuccessfulLogin();
           return;
