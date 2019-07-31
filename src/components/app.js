@@ -1,8 +1,22 @@
-// Clean up new session form (toggle edit mode)
+// TODO: Clean up console log statements
+// TODO: Not authorized and no match
+// TODO: Refactor to call students and mentors once, filter within the components
+// TODO: Require Submit notes before complete button. Add close session, push to sessions
 import React, { Component } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Cookie from "js-cookie";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faHome,
+  faTrash,
+  faSignOutAlt,
+  faEdit,
+  faSpinner
+} from "@fortawesome/free-solid-svg-icons";
+import { library } from "@fortawesome/fontawesome-svg-core";
+
+library.add(faHome, faTrash, faSignOutAlt, faEdit, faSpinner);
 
 import Home from "./pages/home";
 import NavBar from "./navigation/navbar";
@@ -10,6 +24,7 @@ import Sessions from "./pages/sessions";
 import NewSessionForm from "./pages/newSessionForm";
 import Login from "./pages/login";
 import SessionNotes from "./pages/sessionNotes";
+import Notes from "./pages/notes";
 
 class App extends Component {
   constructor(props) {
@@ -18,9 +33,24 @@ class App extends Component {
     this.state = {
       loggedInStatus: "NOT_LOGGED_IN",
       current_user: "",
-      errorText: ""
+      errorText: "",
+      sessions: []
     };
   }
+
+  // Call sessions, check date, check against completed, flip flag false
+  checkCompletedSessions = () => {
+    axios
+      .get("http://localhost:4000/sessions")
+      .then(res => {
+        this.setState({
+          sessions: res.data
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
 
   handleCurrentUser = mentor => {
     this.setState({
@@ -43,7 +73,6 @@ class App extends Component {
   };
 
   handleSuccessfulLogout = () => {
-    // Write conditional to check for cookie
     axios
       .delete(`http://localhost:4000/sessions/delete/${Cookie.get("sesh")}`)
       .then(res => {
@@ -88,6 +117,7 @@ class App extends Component {
       Cookie.get("sesh") &&
       this.state.loggedInStatus === "LOGGED_IN"
     ) {
+      this.checkCompletedSessions();
       this.props.history.push("/");
     }
   };
@@ -96,10 +126,10 @@ class App extends Component {
     this.checkLoginStatus();
   }
 
-  authorizedRoutes() {}
-
   render() {
-    console.log("current user: ", this.state.current_user);
+    // console.log("current user: ", this.state.current_user);
+    // console.log("current user: ", this.state.loggedInStatus);
+    console.log("app session: ", this.state.sessions);
     return (
       <div className="app">
         <div>
@@ -114,7 +144,17 @@ class App extends Component {
               ) : null}
               {this.state.loggedInStatus === "LOGGED_IN" ? (
                 <Switch>
-                  <Route exact path="/" component={Home} />
+                  <Route
+                    exact
+                    path="/"
+                    path="/"
+                    render={props => (
+                      <Home
+                        {...props}
+                        first_name={this.state.current_user.first_name}
+                      />
+                    )}
+                  />
 
                   <Route
                     path="/sessions"
@@ -125,21 +165,11 @@ class App extends Component {
                       />
                     )}
                   />
+                  {this.state.current_user.role === "admin" ? (
+                    <Route path="/student/notes/:id" component={Notes} />
+                  ) : null}
 
                   <Route path="/new-session" component={NewSessionForm} />
-
-                  <Route
-                    path="/login"
-                    render={props => (
-                      <Login
-                        {...props}
-                        handleSuccessfulLogin={this.handleSuccessfulLogin}
-                        handleUnsuccessfulLogin={this.handleUnsuccessfulLogin}
-                        handleCurrentUser={this.handleCurrentUser}
-                        errorText={this.state.errorText}
-                      />
-                    )}
-                  />
 
                   <Route path="/session-notes/:id" component={SessionNotes} />
                 </Switch>

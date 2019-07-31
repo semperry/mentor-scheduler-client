@@ -13,6 +13,9 @@
     grid-template-columns: 80px 100px 130px 100px;
 
     a {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       font-size: 1.5em;
       font-family: "Ubuntu", sans-serif;
       font-weight: 700;
@@ -25,7 +28,8 @@
 
   .sign-out-nav-link {
     width: 80%;
-    text-align: right;
+    text-align: center;
+
     a {
       font-size: 1.5em;
       font-family: "Ubuntu", sans-serif;

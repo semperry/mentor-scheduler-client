@@ -1,3 +1,5 @@
+// What do we need the admins to see as far as notes?
+
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -38,7 +40,7 @@ class SessionDetail extends Component {
       last_name: searchName[1]
     };
     const studentId = this.state.id;
-    console.log(searchData);
+
     e.preventDefault();
 
     axios
@@ -63,6 +65,7 @@ class SessionDetail extends Component {
       selected_mentor: ""
     });
 
+    this.props.getSessions();
     this.props.clearId();
   };
 
@@ -75,70 +78,89 @@ class SessionDetail extends Component {
     this.filterSingleStudent();
   }
 
-  authorizedRoutes = () => {
+  handleDropdownRender = () => {
     const mentors = this.props.mentors.map(mentor => {
       return mentor;
     });
     return (
       <form className="form-group">
-        {this.state.single_session.assigned_to === "" ? (
-          <select
-            required
-            className="text-field select-mentor"
-            value={this.state.selected_mentor}
-            onChange={this.handleDropDownChange}
-          >
-            <option>Select</option>
-            {mentors.map(mentor => {
-              return (
-                <option key={mentor.id}>
-                  {`${mentor.first_name} ${mentor.last_name}`}
-                </option>
-              );
-            })}
-          </select>
-        ) : null}
-        <div className="button-wrapper">
-          {this.state.single_session.assigned_to === "" ? (
-            <button className="btn-primary" onClick={this.handleAssign}>
-              Assign
-            </button>
-          ) : (
-            <Link
-              className="btn-primary"
-              to={{
-                pathname: `/session-notes/${this.state.id}`,
-                state: {
-                  student: this.state.single_session,
-                  mentor: this.props.user_object
-                }
-              }}
-            >
-              View
-            </Link>
-          )}
-          <button className="btn-cancel" onClick={this.handleCloseForm}>
-            close
-          </button>
-        </div>
+        <select
+          required
+          className="text-field select-mentor"
+          value={this.state.selected_mentor}
+          onChange={this.handleDropDownChange}
+        >
+          <option>Select</option>
+          {mentors.map(mentor => {
+            return (
+              <option key={mentor.id}>
+                {`${mentor.first_name} ${mentor.last_name}`}
+              </option>
+            );
+          })}
+        </select>
       </form>
     );
   };
 
+  handleButtonRender = () => {
+    const role = this.state.current_user.role;
+    const session = this.state.single_session;
+    return (
+      <div className="button-wrapper">
+        {role === "admin" &&
+        session.assigned_to === "" &&
+        !session.completed ? (
+          <button className="btn-primary" onClick={this.handleAssign}>
+            Assign
+          </button>
+        ) : !session.completed ? (
+          <Link
+            className="btn-primary"
+            to={{
+              pathname: `/session-notes/${this.state.id}`,
+              state: {
+                student: this.state.single_session,
+                mentor: this.props.user_object
+              }
+            }}
+          >
+            Take Session
+          </Link>
+        ) : role === "admin" && session.completed ? (
+          <Link
+            className="btn-primary"
+            to={{
+              pathname: `/student/notes/${this.state.id}`,
+              state: {
+                student: this.state.single_session
+              }
+            }}
+          >
+            View Notes
+          </Link>
+        ) : null}
+        <button className="btn-cancel" onClick={this.handleCloseForm}>
+          close
+        </button>
+      </div>
+    );
+  };
+
   renderCompletedBy = student => {
-    let completedBy = student.info.pop();
-    console.log(completedBy);
+    let completedBy = student.last_submitted_by;
     return (
       <span>
-        Submitted By: <h2>{completedBy.submitted_by}</h2>
+        Completed By: <h2>{completedBy}</h2>
       </span>
     );
   };
 
   render() {
-    const student = this.state.single_session;
-    console.log("student: ", student.info);
+    console.log(this.state.current_user);
 
+    const student = this.state.single_session;
+    console.log("student: ", student);
     return (
       <div>
         {this.state.single_session !== {} ? (
@@ -160,32 +182,12 @@ class SessionDetail extends Component {
             </div>
 
             <div className="session-detail-bottom">
-              {this.state.current_user === "admin" ? (
-                this.authorizedRoutes()
-              ) : (
-                <form className="form-group">
-                  <div className="button-wrapper">
-                    <Link
-                      className="btn-primary"
-                      to={{
-                        pathname: `/session-notes/${this.state.id}`,
-                        state: {
-                          student: this.state.single_session,
-                          mentor: this.props.user_object
-                        }
-                      }}
-                    >
-                      View
-                    </Link>
-                    <button
-                      className="btn-cancel"
-                      onClick={this.handleCloseForm}
-                    >
-                      close
-                    </button>
-                  </div>
-                </form>
-              )}
+              {this.state.current_user.role === "admin" &&
+              student.assigned_to === "" &&
+              !student.completed
+                ? this.handleDropdownRender()
+                : null}
+              {this.handleButtonRender()}
             </div>
             {student.completed ? this.renderCompletedBy(student) : null}
           </div>

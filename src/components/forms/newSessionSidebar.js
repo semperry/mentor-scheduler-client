@@ -1,4 +1,9 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
+
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 export default class SideBar extends Component {
   constructor(props) {
@@ -22,14 +27,25 @@ export default class SideBar extends Component {
         >
           <div className="ticket-sidebar-wrapper__items-wrapper__item">
             <div className="ticket-sidebar-wrapper__items-wrapper__item__left__title">
-              {`${student.first_name} ${student.last_name}`}
+              <Link
+                to={{
+                  pathname: `student/notes/${student._id}`,
+                  state: {
+                    student: student
+                  }
+                }}
+              >
+                {`${student.first_name} ${student.last_name}`}
+              </Link>
             </div>
             <div>
-              <span onClick={() => this.handleEditClick(student)}>EDIT</span>
+              <span onClick={() => this.handleEditClick(student)}>
+                <FontAwesomeIcon icon="edit" />
+              </span>
             </div>
             <div>
               <span onClick={() => this.handleDeleteClick(student)}>
-                DELETE
+                <FontAwesomeIcon icon="trash" />
               </span>
             </div>
           </div>
@@ -42,7 +58,9 @@ export default class SideBar extends Component {
     return (
       <div className="ticket-sidebar-wrapper">
         <div className="underlined-header">Students</div>
-        {this.props.students != [] ? this.renderStudents() : null}
+        <div className="scroll-box">
+          {this.props.students != [] ? this.renderStudents() : null}
+        </div>
       </div>
     );
   }

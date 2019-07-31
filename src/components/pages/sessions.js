@@ -1,6 +1,4 @@
 // TODO: If assigned, assign button should become reassign
-// TODO: Logo
-// TODO: Logout icon
 // TODO: reset booleans after day ends
 // TODO: redis system
 import React, { Component } from "react";
@@ -142,7 +140,7 @@ export default class Sessions extends Component {
                       key={session._id}
                       setId={this.setId}
                       session={session}
-                      clearId={this.props.clearId}
+                      clearId={this.clearId}
                     />
                   );
                 })
@@ -159,9 +157,10 @@ export default class Sessions extends Component {
               setId={this.setId}
               students={this.state.filtered_sessions}
               mentors={this.state.mentors}
-              current_user={this.state.current_user.role}
+              current_user={this.state.current_user}
               user_object={this.state.current_user}
               handleFilter={this.handleFilter}
+              getSessions={this.getSessions}
             />
           ) : null}
         </div>

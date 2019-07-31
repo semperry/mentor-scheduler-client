@@ -1,4 +1,4 @@
-// If assigned, remove dropdown, add completed route link to individual session
+// TODO: Break up into components, SessionsDetails, Assigned, Completed and pass info
 import React, { Component } from "react";
 import axios from "axios";
 import Cookie from "js-cookie";
@@ -45,11 +45,6 @@ export default class Auth extends Component {
           email: loginData.email,
           session: Cookie.get("sesh")
         });
-        // .then(res => {
-        //   if (res.status === 200) {
-        //     this.props.handleSessionMatch(res.data.email);
-        //   }
-        // });
       })
       .catch(err => {
         console.log("login error: ", err);

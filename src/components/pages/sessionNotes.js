@@ -11,6 +11,7 @@ class SessionNotes extends Component {
       hours_studied: "",
       weekly_goal: "",
       questions: "",
+      percentage: "",
       id: "",
       mentor: "",
       submitText: "",
@@ -19,10 +20,13 @@ class SessionNotes extends Component {
   }
 
   handleComplete = e => {
+    const mentor = this.state.mentor;
     e.preventDefault();
     axios
       .put(`http://localhost:4000/students/completed/${this.state.id}`, {
-        completed: true
+        completed: true,
+        assigned_to: "",
+        last_submitted_by: `${mentor.first_name} ${mentor.last_name}`
       })
       .then(res => {
         console.log(res);
@@ -33,13 +37,14 @@ class SessionNotes extends Component {
     this.props.history.push("/sessions");
   };
 
-  handleSubmit = e => {
+  handleSubmitNotes = e => {
     const mentor = this.state.mentor;
     const notes = {
       notes: this.state.notes,
       hours_studied: this.state.hours_studied,
       weekly_goal: this.state.weekly_goal,
       questions: this.state.questions,
+      percentage: this.state.percentage,
       submitted_by: `${mentor.first_name} ${mentor.last_name}`
     };
 
@@ -101,7 +106,7 @@ class SessionNotes extends Component {
             <h2>{student.special_instructions}</h2>
 
             <div className="comments-container__form-container">
-              <form onSubmit={this.handleSubmit}>
+              <form onSubmit={this.handleSubmitNotes}>
                 <div className="form-group">
                   <input
                     className="text-field"
@@ -122,6 +127,15 @@ class SessionNotes extends Component {
                   />
                 </div>
                 <div className="form-group">
+                  <input
+                    className="text-field"
+                    type="text"
+                    name="percentage"
+                    value={this.state.percentage}
+                    onChange={this.handleChange}
+                    placeholder="Percentage Complete"
+                  />
+
                   <input
                     className="text-field"
                     type="text"

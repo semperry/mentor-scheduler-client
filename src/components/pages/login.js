@@ -23,10 +23,6 @@ class Login extends Component {
     this.props.handleUnsuccessfulLogin();
   };
 
-  // handleSessionMatch = email => {
-  //   this.props.handleSessionMatch(email);
-  // };
-
   render() {
     return (
       <div className="homepage-wrapper">
@@ -36,7 +32,6 @@ class Login extends Component {
           handleUnsuccessfulLogin={this.handleUnsuccessfulLogin}
           handleCurrentUser={this.handleCurrentUser}
           errorText={this.props.errorText}
-          // handleSessionMatch={this.handleSessionMatch}
         />
       </div>
     );

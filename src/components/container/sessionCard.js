@@ -9,6 +9,11 @@ export default class SessionCard extends Component {
     };
   }
 
+  handleClick = id => {
+    this.props.clearId();
+    this.props.setId(id);
+  };
+
   setId = id => {
     this.props.setId(id);
   };
@@ -18,7 +23,7 @@ export default class SessionCard extends Component {
     return (
       <div
         className="ticket-sidebar-wrapper__items-wrapper__item"
-        onClick={() => this.setId(session._id)}
+        onClick={() => this.handleClick(session._id)}
       >
         <div className="ticket-sidebar-wrapper__items-wrapper__item__left">
           {session.day

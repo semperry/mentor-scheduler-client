@@ -1,0 +1,106 @@
+.note-page-container {
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+  width: 100vw;
+
+  .note-page-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 30px;
+  }
+
+  .note-card-container {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    width: 100%;
+    // white-space: nowrap;
+    // text-overflow: ellipsis;
+
+    .notecard-wrapper {
+      padding: 30px 30px;
+      margin-top: 30px;
+      display: flex;
+      width: 25%;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      transition: 0.3s ease-in-out all;
+      box-shadow: 2px 2px 15px 1.5px rgba(0, 0, 0, 0.2);
+      height: 45vw;
+
+      &:hover {
+        box-shadow: 8px 8px 30px 3px rgba(0, 0, 0, 0.4);
+        border-radius: 7px;
+      }
+
+      .notecard-top-container {
+        padding-top: 15px;
+        height: 75%;
+        width: 100%;
+
+        .note-group {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 5px;
+        }
+        .notes-container {
+          height: 60%;
+
+          h1 {
+            margin-bottom: 25px;
+          }
+          .notes {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            overflow-y: scroll;
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(to bottom, white 29px, #00b0d7 1px);
+            background-size: 100% 30px;
+            position: relative;
+            border-radius: 5px;
+            box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2),
+              0px 0px 6px rgba(0, 0, 0, 0.2);
+            h1 {
+              margin-left: 30px;
+            }
+            &:before {
+              content: "";
+              display: block;
+              position: absolute;
+              z-index: 1;
+              top: 0;
+              left: 25px;
+              height: 100%;
+              width: 1px;
+              background: #db4034;
+            }
+            .note-content {
+              font-weight: 900;
+            }
+          }
+        }
+      }
+      .notecard-bottom-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        border-top: 1px solid grey;
+        padding: 15px 0;
+
+        .bottom-content {
+          width: 90%;
+          margin-left: 15px;
+          display: flex;
+          justify-content: space-between;
+        }
+      }
+    }
+  }
+}

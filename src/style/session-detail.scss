@@ -6,4 +6,11 @@
   justify-content: space-between;
   box-shadow: 8px 8px 30px 3px rgba(0, 0, 0, 0.4);
   border-radius: 7px;
+  .form-group {
+    justify-content: flex-start;
+
+    .text-field {
+      width: 20%;
+    }
+  }
 }
