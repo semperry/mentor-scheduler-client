@@ -19,17 +19,38 @@ class SessionNotes extends Component {
     };
   }
 
+  // handleComplete = e => {
+  //   const mentor = this.state.mentor;
+  //   e.preventDefault();
+  //   axios
+  //     .put(`http://localhost:4000/students/completed/${this.state.id}`, {
+  //       completed: true,
+  //       assigned_to: "",
+  //       last_submitted_by: `${mentor.first_name} ${mentor.last_name}`
+  //     })
+  //     .then(res => {
+  //       console.log(res);
+  //     })
+  //     .catch(err => {
+  //       console.log("completed err: ", err);
+  //     });
+  //   this.props.history.push("/sessions");
+  // };
+
   handleComplete = e => {
     const mentor = this.state.mentor;
     e.preventDefault();
     axios
-      .put(`http://localhost:4000/students/completed/${this.state.id}`, {
-        completed: true,
-        assigned_to: "",
-        last_submitted_by: `${mentor.first_name} ${mentor.last_name}`
-      })
+      .post("http://localhost:4000/redis/complete", { id: this.state.id })
       .then(res => {
         console.log(res);
+      })
+      .then(() => {
+        axios.put(`http://localhost:4000/students/completed/${this.state.id}`, {
+          completed: false,
+          assigned_to: "",
+          last_submitted_by: `${mentor.first_name} ${mentor.last_name}`
+        });
       })
       .catch(err => {
         console.log("completed err: ", err);

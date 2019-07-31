@@ -1,5 +1,3 @@
-// What do we need the admins to see as far as notes?
-
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -110,11 +108,11 @@ class SessionDetail extends Component {
       <div className="button-wrapper">
         {role === "admin" &&
         session.assigned_to === "" &&
-        !session.completed ? (
+        !this.props.redis_data.includes(session._id) ? (
           <button className="btn-primary" onClick={this.handleAssign}>
             Assign
           </button>
-        ) : !session.completed ? (
+        ) : !this.props.redis_data.includes(session._id) ? (
           <Link
             className="btn-primary"
             to={{
@@ -127,7 +125,7 @@ class SessionDetail extends Component {
           >
             Take Session
           </Link>
-        ) : role === "admin" && session.completed ? (
+        ) : role === "admin" && this.props.redis_data.includes(session._id) ? (
           <Link
             className="btn-primary"
             to={{
@@ -184,12 +182,14 @@ class SessionDetail extends Component {
             <div className="session-detail-bottom">
               {this.state.current_user.role === "admin" &&
               student.assigned_to === "" &&
-              !student.completed
+              !this.props.redis_data.includes(student._id)
                 ? this.handleDropdownRender()
                 : null}
               {this.handleButtonRender()}
             </div>
-            {student.completed ? this.renderCompletedBy(student) : null}
+            {this.props.redis_data.includes(student._id)
+              ? this.renderCompletedBy(student)
+              : null}
           </div>
         ) : null}
       </div>

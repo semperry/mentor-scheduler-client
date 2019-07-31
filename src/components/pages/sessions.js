@@ -1,6 +1,4 @@
 // TODO: If assigned, assign button should become reassign
-// TODO: reset booleans after day ends
-// TODO: redis system
 import React, { Component } from "react";
 import axios from "axios";
 import moment from "moment";
@@ -19,6 +17,7 @@ export default class Sessions extends Component {
       current_id: "",
       current_filter: "",
       filtered_sessions: [],
+      redis_data: [],
       current_day: moment()
         .format("dddd")
         .toLowerCase()
@@ -38,6 +37,7 @@ export default class Sessions extends Component {
   };
 
   handleFilter = filter => {
+    this.clearId();
     this.getSessions(filter);
   };
 
@@ -64,7 +64,7 @@ export default class Sessions extends Component {
             filtered_sessions: res.data.filter(student => {
               return (
                 student.assigned_to === "" &&
-                student.completed === false &&
+                !this.state.redis_data.includes(student._id) &&
                 student.day.toLowerCase() == this.state.current_day
               );
             })
@@ -74,23 +74,44 @@ export default class Sessions extends Component {
             filtered_sessions: res.data.filter(student => {
               return (
                 student.assigned_to === this.state.current_user.id &&
-                student.completed === false &&
+                !this.state.redis_data.includes(student._id) &&
                 student.day.toLowerCase() == this.state.current_day
               );
             })
           });
         } else if (filter === "completed") {
-          this.setState({
-            filtered_sessions: res.data.filter(student => {
-              return student.completed === true;
-            })
-          });
+          this.handleCompleted(res.data);
         }
       })
       .catch(err => {
         console.log("getSessions: ", err);
       });
   }
+
+  handleCompleted = students => {
+    axios
+      .get(`http://localhost:4000/redis/completed`)
+      .then(res => {
+        this.setState({
+          redis_data: res.data
+        });
+      })
+      .then(() => {
+        this.setState({
+          filtered_sessions: students.filter(student => {
+            if (
+              this.state.redis_data.includes(student._id) &&
+              student.day.toLowerCase() == this.state.current_day
+            ) {
+              return student;
+            }
+          })
+        });
+      })
+      .catch(err => {
+        console.log("handleCompletedError", err);
+      });
+  };
 
   componentDidMount() {
     this.getMentors();
@@ -161,6 +182,7 @@ export default class Sessions extends Component {
               user_object={this.state.current_user}
               handleFilter={this.handleFilter}
               getSessions={this.getSessions}
+              redis_data={this.state.redis_data}
             />
           ) : null}
         </div>
