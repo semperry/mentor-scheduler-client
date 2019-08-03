@@ -1,4 +1,9 @@
 // TODO: If assigned, assign button should become reassign
+// TODO: Fix the damn edit feature man, it shouldn't be that fucking hard!
+// TODO: Fix the icons on sidebar cards
+// TODO: full duplex implementation
+// TODO: hooks refactor
+// TODO: Live api test
 import React, { Component } from "react";
 import axios from "axios";
 import moment from "moment";
@@ -17,10 +22,10 @@ export default class Sessions extends Component {
       current_id: "",
       current_filter: "",
       filtered_sessions: [],
-      redis_data: [],
       current_day: moment()
         .format("dddd")
-        .toLowerCase()
+        .toLowerCase(),
+      redis_data: []
     };
   }
 
@@ -62,6 +67,7 @@ export default class Sessions extends Component {
         if (filter === "sessions") {
           this.setState({
             filtered_sessions: res.data.filter(student => {
+              console.log("sessions filter: ", student);
               return (
                 student.assigned_to === "" &&
                 !this.state.redis_data.includes(student._id) &&
@@ -176,12 +182,11 @@ export default class Sessions extends Component {
               id={this.state.current_id}
               clearId={this.clearId}
               setId={this.setId}
+              handleFilter={this.handleFilter}
               students={this.state.filtered_sessions}
               mentors={this.state.mentors}
               current_user={this.state.current_user}
               user_object={this.state.current_user}
-              handleFilter={this.handleFilter}
-              getSessions={this.getSessions}
               redis_data={this.state.redis_data}
             />
           ) : null}

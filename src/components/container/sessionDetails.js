@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { withRouter } from "react-router";
 import axios from "axios";
 
 class SessionDetail extends Component {
@@ -48,8 +49,8 @@ class SessionDetail extends Component {
           .put(`http://localhost:4000/students/assign-to/${studentId}`, {
             assigned_to: res.data
           })
-          .then(res => {
-            console.log(res);
+          .then(() => {
+            this.props.handleFilter();
           })
           .catch(err => {
             console.log("put error", err);
@@ -63,7 +64,6 @@ class SessionDetail extends Component {
       selected_mentor: ""
     });
 
-    this.props.getSessions();
     this.props.clearId();
   };
 
@@ -197,4 +197,4 @@ class SessionDetail extends Component {
   }
 }
 
-export default SessionDetail;
+export default withRouter(SessionDetail);

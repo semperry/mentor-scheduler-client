@@ -19,24 +19,6 @@ class SessionNotes extends Component {
     };
   }
 
-  // handleComplete = e => {
-  //   const mentor = this.state.mentor;
-  //   e.preventDefault();
-  //   axios
-  //     .put(`http://localhost:4000/students/completed/${this.state.id}`, {
-  //       completed: true,
-  //       assigned_to: "",
-  //       last_submitted_by: `${mentor.first_name} ${mentor.last_name}`
-  //     })
-  //     .then(res => {
-  //       console.log(res);
-  //     })
-  //     .catch(err => {
-  //       console.log("completed err: ", err);
-  //     });
-  //   this.props.history.push("/sessions");
-  // };
-
   handleComplete = e => {
     const mentor = this.state.mentor;
     e.preventDefault();
@@ -47,7 +29,6 @@ class SessionNotes extends Component {
       })
       .then(() => {
         axios.put(`http://localhost:4000/students/completed/${this.state.id}`, {
-          completed: false,
           assigned_to: "",
           last_submitted_by: `${mentor.first_name} ${mentor.last_name}`
         });
@@ -107,9 +88,7 @@ class SessionNotes extends Component {
   }
 
   render() {
-    console.log(this.props.location.state.mentor);
     const student = this.props.location.state.student;
-    console.log(student);
     return (
       <div className="container">
         <div className="ticket-page-wrapper">
@@ -177,18 +156,23 @@ class SessionNotes extends Component {
                     placeholder="Session Notes"
                   />
                 </div>
-                <button type="submit" className="btn-primary">
-                  Submit Notes
-                </button>
-                <h2>{this.state.submitText}</h2>
+                {this.state.submitText === "" ? (
+                  <button type="submit" className="btn-primary">
+                    Submit Notes
+                  </button>
+                ) : (
+                  <h2>{this.state.submitText}</h2>
+                )}
               </form>
             </div>
             <div className="ticket-detail__bottom">
-              {this.state.notes !== "" ? (
+              {this.state.submitText !== "" ? (
                 <button onClick={this.handleComplete} className="btn-primary">
                   Mark Complete
                 </button>
-              ) : null}
+              ) : (
+                <span>Submit notes above first</span>
+              )}
             </div>
           </div>
         </div>

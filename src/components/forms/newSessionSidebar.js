@@ -39,13 +39,20 @@ export default class SideBar extends Component {
               </Link>
             </div>
             <div>
-              <span onClick={() => this.handleEditClick(student)}>
+              <span
+                style={{ color: "#00c274", marginRight: "15px" }}
+                onClick={() => this.handleEditClick(student)}
+              >
                 <FontAwesomeIcon icon="edit" />
+                Edit
               </span>
-            </div>
-            <div>
-              <span onClick={() => this.handleDeleteClick(student)}>
+
+              <span
+                style={{ color: "darkred" }}
+                onClick={() => this.handleDeleteClick(student)}
+              >
                 <FontAwesomeIcon icon="trash" />
+                Delete
               </span>
             </div>
           </div>
