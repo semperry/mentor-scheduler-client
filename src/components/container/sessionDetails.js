@@ -1,44 +1,32 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { withRouter } from "react-router";
 import axios from "axios";
 
-class SessionDetail extends Component {
-  constructor(props) {
-    super(props);
+const SessionDetail = props => {
+  const [currentUser, setCurrentUser] = useState(props.currentUser);
+  const [students, setStudents] = useState(props.students);
+  const [mentors, setMentors] = useState(props.mentors);
+  const [id, setId] = useState(props.id);
+  const [redisData, setRedisData] = useState(props.redisData);
+  const [selectedMentor, setSelectedMentor] = useState("");
+  const [singleSession, setSingleSession] = useState({});
 
-    this.state = {
-      current_user: props.current_user,
-      students: props.students,
-      mentors: props.mentors,
-      id: props.id,
-      selected_mentor: "",
-      assign_mentor: "",
-      single_session: {}
-    };
-  }
-
-  filterSingleStudent = () => {
-    this.setState({
-      single_session: this.props.students.filter(student => {
-        return student._id === this.state.id;
+  const filterSingleStudent = () => {
+    setSingleSession(
+      students.filter(student => {
+        return student._id === id;
       })[0]
-    });
+    );
   };
 
-  handleDropDownChange = e => {
-    this.setState({
-      selected_mentor: e.target.value
-    });
-  };
+  const handleAssign = e => {
+    const searchName = selectedMentor.split(" ");
 
-  handleAssign = e => {
-    const searchName = this.state.selected_mentor.split(" ");
     const searchData = {
       first_name: searchName[0],
       last_name: searchName[1]
     };
-    const studentId = this.state.id;
 
     e.preventDefault();
 
@@ -46,11 +34,11 @@ class SessionDetail extends Component {
       .post("http://localhost:4000/mentors/search-name", searchData)
       .then(res => {
         axios
-          .put(`http://localhost:4000/students/assign-to/${studentId}`, {
+          .put(`http://localhost:4000/students/assign-to/${id}`, {
             assigned_to: res.data
           })
           .then(() => {
-            this.props.handleFilter();
+            props.handleFilter();
           })
           .catch(err => {
             console.log("put error", err);
@@ -60,35 +48,28 @@ class SessionDetail extends Component {
         console.log("search data err", err);
       });
 
-    this.setState({
-      selected_mentor: ""
-    });
-
-    this.props.clearId();
+    setSelectedMentor("");
+    props.clearId();
   };
 
-  handleCloseForm = e => {
+  const handleCloseForm = e => {
     e.preventDefault();
-    this.props.clearId();
+    props.clearId();
   };
 
-  componentDidMount() {
-    this.filterSingleStudent();
-  }
-
-  handleDropdownRender = () => {
+  const handleDropdownRender = () => {
     return (
       <form className="form-group">
         <select
           required
           className="text-field select-mentor"
-          value={this.state.selected_mentor}
-          onChange={this.handleDropDownChange}
+          value={selectedMentor}
+          onChange={e => setSelectedMentor(e.target.value)}
         >
           <option defaultValue value="">
             Mentor
           </option>
-          {this.props.mentors.map(mentor => {
+          {mentors.map(mentor => {
             return (
               <option key={mentor._id}>
                 {`${mentor.first_name} ${mentor.last_name}`}
@@ -100,56 +81,57 @@ class SessionDetail extends Component {
     );
   };
 
-  handleButtonRender = () => {
-    const role = this.state.current_user.role;
-    const session = this.state.single_session;
+  const handleButtonRender = () => {
+    const role = currentUser.role;
+    const session = singleSession;
+
     return (
       <div className="button-wrapper">
         {role === "admin" &&
         session.assigned_to === "" &&
-        !this.props.redis_data.includes(session._id) ? (
-          this.state.selected_mentor ? (
-            <button className="btn-primary" onClick={this.handleAssign}>
+        !redisData.includes(session._id) ? (
+          selectedMentor ? (
+            <button className="btn-primary" onClick={handleAssign}>
               Assign
             </button>
           ) : (
             <span className="btn-primary">Select a Mentor</span>
           )
-        ) : !this.props.redis_data.includes(session._id) ? (
+        ) : !redisData.includes(session._id) ? (
           <Link
             className="btn-primary"
             to={{
-              pathname: `/session-notes/${this.state.id}`,
+              pathname: `/session-notes/${id}`,
               state: {
-                student: this.state.single_session,
-                mentor: this.props.user_object
+                student: singleSession,
+                mentor: currentUser
               }
             }}
           >
             Take Session
           </Link>
-        ) : role === "admin" && this.props.redis_data.includes(session._id) ? (
+        ) : role === "admin" && redisData.includes(session._id) ? (
           <Link
             className="btn-primary"
             to={{
-              pathname: `/student/notes/${this.state.id}`,
+              pathname: `/student/notes/${id}`,
               state: {
-                student: this.state.single_session
+                student: singleSession
               }
             }}
           >
             View Notes
           </Link>
         ) : null}
-        <button className="btn-cancel" onClick={this.handleCloseForm}>
+        <button className="btn-cancel" onClick={handleCloseForm}>
           close
         </button>
       </div>
     );
   };
 
-  renderCompletedBy = student => {
-    let completedBy = student.last_submitted_by;
+  const renderCompletedBy = student => {
+    const completedBy = student.last_submitted_by;
     return (
       <span>
         Completed By: <h2>{completedBy}</h2>
@@ -157,48 +139,47 @@ class SessionDetail extends Component {
     );
   };
 
-  render() {
-    console.log(this.state.current_user);
-    console.log("selected: ", this.state.selected_mentor);
+  useEffect(() => {
+    filterSingleStudent();
+  }, []);
 
-    const student = this.state.single_session;
-    console.log("student: ", student);
-    return (
-      <div>
-        {this.state.single_session !== {} ? (
-          <div className="session-detail">
-            <div className="session-detail-top">
-              <h1>Name: {student.first_name + " " + student.last_name}</h1>
-              <br />
-              <h1>Time: {student.time}</h1>
-              <br />
-              <h2>Phone: {student.phone}</h2>
-              <br />
-              <h2>Email: {student.email}</h2>
-              <br />
-              {student.special_instructions ? (
-                <div>
-                  <h2>Instructions: {student.special_instructions}</h2>
-                </div>
-              ) : null}
-            </div>
-
-            <div className="session-detail-bottom">
-              {this.state.current_user.role === "admin" &&
-              student.assigned_to === "" &&
-              !this.props.redis_data.includes(student._id)
-                ? this.handleDropdownRender()
-                : null}
-              {this.handleButtonRender()}
-            </div>
-            {this.props.redis_data.includes(student._id)
-              ? this.renderCompletedBy(student)
-              : null}
+  return (
+    <div>
+      {singleSession !== {} ? (
+        <div className="session-detail">
+          <div className="session-detail-top">
+            <h1>
+              Name: {singleSession.first_name + " " + singleSession.last_name}
+            </h1>
+            <br />
+            <h1>Time: {singleSession.time}</h1>
+            <br />
+            <h2>Phone: {singleSession.phone}</h2>
+            <br />
+            <h2>Email: {singleSession.email}</h2>
+            <br />
+            {singleSession.special_instructions ? (
+              <div>
+                <h2>Instructions: {singleSession.special_instructions}</h2>
+              </div>
+            ) : null}
           </div>
-        ) : null}
-      </div>
-    );
-  }
-}
+
+          <div className="session-detail-bottom">
+            {currentUser.role === "admin" &&
+            singleSession.assigned_to === "" &&
+            !redisData.includes(singleSession._id)
+              ? handleDropdownRender()
+              : null}
+            {handleButtonRender()}
+          </div>
+          {redisData.includes(singleSession._id)
+            ? renderCompletedBy(singleSession)
+            : null}
+        </div>
+      ) : null}
+    </div>
+  );
+};
 
 export default withRouter(SessionDetail);

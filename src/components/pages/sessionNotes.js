@@ -1,34 +1,29 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { withRouter } from "react-router";
 import axios from "axios";
 
-class SessionNotes extends Component {
-  constructor(props) {
-    super(props);
+const SessionNotes = props => {
+  const [notes, setNotes] = useState("");
+  const [hours_studied, setHoursStudied] = useState("");
+  const [weekly_goal, setWeeklyGoal] = useState("");
+  const [questions, setQuestions] = useState("");
+  const [percentage, setPercentage] = useState("");
+  const [id, setId] = useState(props.location.state.student._id);
+  const [mentor, setMentor] = useState(props.location.state.mentor);
+  const [student, setStudent] = useState(props.location.state.student);
+  const [submitText, setSubmitText] = useState("");
+  const [errorText, setErrorText] = useState("");
 
-    this.state = {
-      notes: "",
-      hours_studied: "",
-      weekly_goal: "",
-      questions: "",
-      percentage: "",
-      id: "",
-      mentor: "",
-      submitText: "",
-      errorText: ""
-    };
-  }
-
-  handleComplete = e => {
-    const mentor = this.state.mentor;
+  const handleComplete = e => {
     e.preventDefault();
+
     axios
-      .post("http://localhost:4000/redis/complete", { id: this.state.id })
+      .post("http://localhost:4000/redis/complete", { id: id })
       .then(res => {
         console.log(res);
       })
       .then(() => {
-        axios.put(`http://localhost:4000/students/completed/${this.state.id}`, {
+        axios.put(`http://localhost:4000/students/completed/${id}`, {
           assigned_to: "",
           last_submitted_by: `${mentor.first_name} ${mentor.last_name}`
         });
@@ -36,36 +31,29 @@ class SessionNotes extends Component {
       .catch(err => {
         console.log("completed err: ", err);
       });
-    this.props.history.push("/sessions");
+    props.history.push("/sessions");
   };
 
-  handleSubmitNotes = e => {
-    const mentor = this.state.mentor;
-    const notes = {
-      notes: this.state.notes,
-      hours_studied: this.state.hours_studied,
-      weekly_goal: this.state.weekly_goal,
-      questions: this.state.questions,
-      percentage: this.state.percentage,
+  const handleSubmitNotes = e => {
+    const sendNotes = {
+      notes: notes,
+      hours_studied: hours_studied,
+      weekly_goal: weekly_goal,
+      questions: questions,
+      percentage: percentage,
       submitted_by: `${mentor.first_name} ${mentor.last_name}`
     };
 
-    console.log(notes);
-
     e.preventDefault();
     axios
-      .put(`http://localhost:4000/students/notes/${this.state.id}`, {
-        info: notes
+      .put(`http://localhost:4000/students/notes/${id}`, {
+        info: sendNotes
       })
       .then(res => {
         if (res.status === 200) {
-          this.setState({
-            submitText: "Notes Submitted!"
-          });
+          setSubmitText("Notes Submitted!");
         } else {
-          this.setState({
-            errorText: "Oops, something went wrong!"
-          });
+          setErrorText("Oops, something went wrong!");
           console.log("Notes: ", res);
         }
       })
@@ -74,111 +62,90 @@ class SessionNotes extends Component {
       });
   };
 
-  handleChange = e => {
-    this.setState({
-      [e.target.name]: e.target.value
-    });
-  };
+  return (
+    <div className="container">
+      <div className="ticket-page-wrapper">
+        <div className="ticket-detail">
+          <div className="ticket-detail__top__heading">
+            <h1>{`${student.first_name} ${student.last_name}`}</h1>
+          </div>
+          <br />
+          <h1>{student.phone}</h1>
+          <br />
 
-  componentDidMount() {
-    this.setState({
-      id: this.props.location.state.student._id,
-      mentor: this.props.location.state.mentor
-    });
-  }
+          <h1>{student.email}</h1>
+          <br />
 
-  render() {
-    const student = this.props.location.state.student;
-    return (
-      <div className="container">
-        <div className="ticket-page-wrapper">
-          <div className="ticket-detail">
-            <div className="ticket-detail__top__heading">
-              <h1>{`${student.first_name} ${student.last_name}`}</h1>
-            </div>
-            <br />
-            <h1>{student.phone}</h1>
-            <br />
+          <h2>{student.special_instructions}</h2>
 
-            <h1>{student.email}</h1>
-            <br />
+          <div className="comments-container__form-container">
+            <form onSubmit={handleSubmitNotes}>
+              <div className="form-group">
+                <input
+                  className="text-field"
+                  type="text"
+                  value={hours_studied}
+                  onChange={e => setHoursStudied(e.target.value)}
+                  placeholder="Hours Studied"
+                />
 
-            <h2>{student.special_instructions}</h2>
+                <input
+                  className="text-field"
+                  type="text"
+                  value={weekly_goal}
+                  onChange={e => setWeeklyGoal(e.target.value)}
+                  placeholder="Weekly Goal"
+                />
+              </div>
+              <div className="form-group">
+                <input
+                  className="text-field"
+                  type="text"
+                  value={percentage}
+                  onChange={e => setPercentage(e.target.value)}
+                  placeholder="Percentage Complete"
+                />
 
-            <div className="comments-container__form-container">
-              <form onSubmit={this.handleSubmitNotes}>
-                <div className="form-group">
-                  <input
-                    className="text-field"
-                    type="text"
-                    name="hours_studied"
-                    value={this.state.hours_studied}
-                    onChange={this.handleChange}
-                    placeholder="Hours Studied"
-                  />
-
-                  <input
-                    className="text-field"
-                    type="text"
-                    name="weekly_goal"
-                    value={this.state.weekly_goal}
-                    onChange={this.handleChange}
-                    placeholder="Weekly Goal"
-                  />
-                </div>
-                <div className="form-group">
-                  <input
-                    className="text-field"
-                    type="text"
-                    name="percentage"
-                    value={this.state.percentage}
-                    onChange={this.handleChange}
-                    placeholder="Percentage Complete"
-                  />
-
-                  <input
-                    className="text-field"
-                    type="text"
-                    name="questions"
-                    value={this.state.questions}
-                    onChange={this.handleChange}
-                    placeholder="Questions"
-                  />
-                </div>
-                <div className="form-group">
-                  <textarea
-                    required
-                    className="text-area-field"
-                    name="notes"
-                    value={this.state.notes}
-                    onChange={this.handleChange}
-                    style={{ height: 150 }}
-                    placeholder="Session Notes"
-                  />
-                </div>
-                {this.state.submitText === "" ? (
-                  <button type="submit" className="btn-primary">
-                    Submit Notes
-                  </button>
-                ) : (
-                  <h2>{this.state.submitText}</h2>
-                )}
-              </form>
-            </div>
-            <div className="ticket-detail__bottom">
-              {this.state.submitText !== "" ? (
-                <button onClick={this.handleComplete} className="btn-primary">
-                  Mark Complete
+                <input
+                  className="text-field"
+                  type="text"
+                  value={questions}
+                  onChange={e => setQuestions(e.target.value)}
+                  placeholder="Questions"
+                />
+              </div>
+              <div className="form-group">
+                <textarea
+                  required
+                  className="text-area-field"
+                  value={notes}
+                  onChange={e => setNotes(e.target.value)}
+                  style={{ height: 150 }}
+                  placeholder="Session Notes"
+                />
+              </div>
+              {submitText === "" ? (
+                <button type="submit" className="btn-primary">
+                  Submit Notes
                 </button>
               ) : (
-                <span>Submit notes above first</span>
+                <h2>{submitText}</h2>
               )}
-            </div>
+            </form>
+          </div>
+          <div className="ticket-detail__bottom">
+            {submitText !== "" ? (
+              <button onClick={handleComplete} className="btn-primary">
+                Mark Complete
+              </button>
+            ) : (
+              <span>Submit notes above first</span>
+            )}
           </div>
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default withRouter(SessionNotes);

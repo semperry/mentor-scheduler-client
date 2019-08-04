@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 
 const Home = props => {
-  const [first_name, setFirstName] = useState(props.first_name);
+  const [currentUser, setCurrentUser] = useState(props.currentUser);
 
   return (
     <div className="home">
       <h1>Bottega Mentor Dashboard</h1>
       <br />
-      <h1>Welcome, {first_name}</h1>
+      <h1>Welcome, {currentUser.first_name}</h1>
       <br />
       <h3>
         Use this App to assign mentor calls, add and edit mentor sessions, and

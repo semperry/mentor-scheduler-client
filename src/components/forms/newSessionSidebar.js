@@ -1,25 +1,21 @@
-import React, { Component } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 
-export default class SideBar extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  handleEditClick = student => {
-    this.props.handleEditClick(student);
+const SideBar = props => {
+  const handleEditClick = student => {
+    props.handleEditClick(student);
   };
 
-  handleDeleteClick = student => {
-    this.props.handleDeleteClick(student);
+  const handleDeleteClick = student => {
+    props.handleDeleteClick(student);
   };
 
-  renderStudents = () => {
-    return this.props.students.map(student => {
+  const renderStudents = () => {
+    return props.students.map(student => {
       return (
         <div
           key={student._id}
@@ -41,7 +37,7 @@ export default class SideBar extends Component {
             <div>
               <span
                 style={{ color: "#00c274", marginRight: "15px" }}
-                onClick={() => this.handleEditClick(student)}
+                onClick={() => handleEditClick(student)}
               >
                 <FontAwesomeIcon icon="edit" />
                 Edit
@@ -49,7 +45,7 @@ export default class SideBar extends Component {
 
               <span
                 style={{ color: "darkred" }}
-                onClick={() => this.handleDeleteClick(student)}
+                onClick={() => handleDeleteClick(student)}
               >
                 <FontAwesomeIcon icon="trash" />
                 Delete
@@ -61,14 +57,14 @@ export default class SideBar extends Component {
     });
   };
 
-  render() {
-    return (
-      <div className="ticket-sidebar-wrapper">
-        <div className="underlined-header">Students</div>
-        <div className="scroll-box">
-          {this.props.students != [] ? this.renderStudents() : null}
-        </div>
+  return (
+    <div className="ticket-sidebar-wrapper">
+      <div className="underlined-header">Students</div>
+      <div className="scroll-box">
+        {props.students != [] ? renderStudents() : null}
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+export default SideBar;

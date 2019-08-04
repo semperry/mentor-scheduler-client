@@ -1,45 +1,38 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 
-export default class SessionCard extends Component {
-  constructor(props) {
-    super(props);
+const SessionCard = props => {
+  const [session, setSession] = useState(props.session);
 
-    this.state = {
-      session: props.session
-    };
-  }
-
-  handleClick = id => {
-    this.props.clearId();
-    this.props.setId(id);
+  const handleClick = id => {
+    props.clearId();
+    props.setId(id);
   };
 
-  setId = id => {
-    this.props.setId(id);
+  const setId = id => {
+    props.setId(id);
   };
 
-  render() {
-    const session = this.state.session;
-    return (
-      <div
-        className="ticket-sidebar-wrapper__items-wrapper__item"
-        onClick={() => this.handleClick(session._id)}
-      >
-        <div className="ticket-sidebar-wrapper__items-wrapper__item__left">
-          {session.day
-            .split("")
-            .splice(0, 3)
-            .join("")
-            .toUpperCase()}
+  return (
+    <div
+      className="ticket-sidebar-wrapper__items-wrapper__item"
+      onClick={() => handleClick(session._id)}
+    >
+      <div className="ticket-sidebar-wrapper__items-wrapper__item__left">
+        {session.day
+          .split("")
+          .splice(0, 3)
+          .join("")
+          .toUpperCase()}
 
-          <div className="ticket-sidebar-wrapper__items-wrapper__item__left__title">
-            {session.first_name + " " + session.last_name}
-          </div>
-        </div>
-        <div className="ticket-sidebar-wrapper__items-wrapper__item__timestamp">
-          {session.time}
+        <div className="ticket-sidebar-wrapper__items-wrapper__item__left__title">
+          {session.first_name + " " + session.last_name}
         </div>
       </div>
-    );
-  }
-}
+      <div className="ticket-sidebar-wrapper__items-wrapper__item__timestamp">
+        {session.time}
+      </div>
+    </div>
+  );
+};
+
+export default SessionCard;

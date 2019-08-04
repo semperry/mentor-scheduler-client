@@ -1,8 +1,7 @@
-// TODO: Clean up console log statements
 // TODO: Not authorized and no match
-// TODO: Refactor to call students and mentors once, filter within the components
-// TODO: Require Submit notes before complete button. Add close session, push to sessions
-import React, { Component } from "react";
+// TODO: Set error text for login page
+// TODO: use of hookrouter instead of browserrouter
+import React, { useState, useEffect } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Cookie from "js-cookie";
 import axios from "axios";
@@ -26,53 +25,34 @@ import Login from "./pages/login";
 import SessionNotes from "./pages/sessionNotes";
 import Notes from "./pages/notes";
 
-class App extends Component {
-  constructor(props) {
-    super(props);
+const App = () => {
+  const [loggedInStatus, setLoggedInStatus] = useState("NOT_LOGGED_IN");
+  const [currentUser, setCurrentUser] = useState("");
 
-    this.state = {
-      loggedInStatus: "NOT_LOGGED_IN",
-      current_user: "",
-      errorText: "",
-      sessions: []
-    };
-  }
-
-  // Call sessions, check date, check against completed, flip flag false
-  checkCompletedSessions = () => {
+  const checkCompletedSessions = () => {
     axios
       .get("http://localhost:4000/sessions")
       .then(res => {
-        this.setState({
-          sessions: res.data
-        });
+        setSessions(res.data);
       })
       .catch(err => {
         console.log(err);
       });
   };
 
-  handleCurrentUser = mentor => {
-    this.setState({
-      current_user: mentor
-    });
+  const handleCurrentUser = mentor => {
+    setCurrentUser(mentor);
   };
 
-  handleSuccessfulLogin = () => {
-    this.setState({
-      loggedInStatus: "LOGGED_IN",
-      errorText: ""
-    });
+  const handleSuccessfulLogin = () => {
+    setLoggedInStatus("LOGGED_IN");
   };
 
-  handleUnsuccessfulLogin = () => {
-    this.setState({
-      loggedInStatus: "NOT_LOGGED_IN",
-      errorText: "Wrong Email or Password"
-    });
+  const handleUnsuccessfulLogin = () => {
+    setLoggedInStatus("NOT_LOGGED_IN");
   };
 
-  handleSuccessfulLogout = () => {
+  const handleSuccessfulLogout = () => {
     axios
       .delete(`http://localhost:4000/sessions/delete/${Cookie.get("sesh")}`)
       .then(res => {
@@ -82,30 +62,24 @@ class App extends Component {
           console.log("del res: ", res);
         }
       });
-
-    this.setState({
-      loggedInStatus: "NOT_LOGGED_IN",
-      current_user: ""
-    });
+    setLoggedInStatus("NOT_LOGGED_IN");
+    setCurrentUser("");
   };
 
-  handleGetUser = email => {
-    axios.get(`http://localhost:4000/mentors/email/${email}`).then(res => {
-      this.setState({
-        current_user: res.data,
-        loggedInStatus: "LOGGED_IN"
-      });
-    });
+  const handleGetUser = email => {
+    axios
+      .get(`http://localhost:4000/mentors/email/${email}`)
+      .then(res => setCurrentUser(res.data))
+      .then(() => setLoggedInStatus("LOGGED_IN"));
   };
 
-  checkLoginStatus = () => {
-    // Finsih logic here
-    if (Cookie.get("sesh") && this.state.loggedInStatus === "NOT_LOGGED_IN") {
+  const checkLoginStatus = () => {
+    if (Cookie.get("sesh") && loggedInStatus === "NOT_LOGGED_IN") {
       axios
         .get(`http://localhost:4000/sessions/${Cookie.get("sesh")}`)
         .then(res => {
           if (res.status === 200) {
-            this.handleGetUser(res.data.email);
+            handleGetUser(res.data.email);
           }
         })
         .catch(err => {
@@ -113,102 +87,85 @@ class App extends Component {
         });
     } else if (!Cookie.get("sesh")) {
       return;
-    } else if (
-      Cookie.get("sesh") &&
-      this.state.loggedInStatus === "LOGGED_IN"
-    ) {
-      this.checkCompletedSessions();
-      this.props.history.push("/");
+    } else if (Cookie.get("sesh") && loggedInStatus === "LOGGED_IN") {
+      checkCompletedSessions();
+      props.history.push("/");
     }
   };
 
-  componentDidMount() {
-    this.checkLoginStatus();
-  }
+  useEffect(() => {
+    checkLoginStatus();
+  }, []);
 
-  render() {
-    // console.log("current user: ", this.state.current_user);
-    // console.log("current user: ", this.state.loggedInStatus);
-    console.log("app session: ", this.state.sessions);
-    return (
-      <div className="app">
-        <div>
-          <BrowserRouter>
-            <div className="dashboard-layout-wrapper">
-              {this.state.loggedInStatus === "LOGGED_IN" ? (
-                <NavBar
-                  loggedInStatus={this.state.loggedInStatus}
-                  handleSuccessfulLogout={this.handleSuccessfulLogout}
-                  current_user={this.state.current_user}
+  return (
+    <div className="app">
+      <div>
+        <BrowserRouter>
+          <div className="dashboard-layout-wrapper">
+            {loggedInStatus === "LOGGED_IN" ? (
+              <NavBar
+                loggedInStatus={loggedInStatus}
+                handleSuccessfulLogout={handleSuccessfulLogout}
+              />
+            ) : null}
+            {loggedInStatus === "LOGGED_IN" ? (
+              <Switch>
+                <Route
+                  exact
+                  path="/"
+                  path="/"
+                  render={props => (
+                    <Home {...props} currentUser={currentUser} />
+                  )}
                 />
-              ) : null}
-              {this.state.loggedInStatus === "LOGGED_IN" ? (
-                <Switch>
-                  <Route
-                    exact
-                    path="/"
-                    path="/"
-                    render={props => (
-                      <Home
-                        {...props}
-                        first_name={this.state.current_user.first_name}
-                      />
-                    )}
-                  />
 
-                  <Route
-                    path="/sessions"
-                    render={props => (
-                      <Sessions
-                        {...props}
-                        current_user={this.state.current_user}
-                      />
-                    )}
-                  />
-                  {this.state.current_user.role === "admin" ? (
-                    <Route path="/student/notes/:id" component={Notes} />
-                  ) : null}
+                <Route
+                  path="/sessions"
+                  render={props => (
+                    <Sessions {...props} currentUser={currentUser} />
+                  )}
+                />
+                {currentUser.role === "admin" ? (
+                  <Route path="/student/notes/:id" component={Notes} />
+                ) : null}
 
-                  <Route path="/new-session" component={NewSessionForm} />
+                <Route path="/new-session" component={NewSessionForm} />
 
-                  <Route path="/session-notes/:id" component={SessionNotes} />
-                </Switch>
-              ) : (
-                <Switch>
-                  <Route
-                    exact
-                    path="/"
-                    render={props => (
-                      <Login
-                        {...props}
-                        handleSuccessfulLogin={this.handleSuccessfulLogin}
-                        handleUnsuccessfulLogin={this.handleUnsuccessfulLogin}
-                        handleCurrentUser={this.handleCurrentUser}
-                        errorText={this.state.errorText}
-                      />
-                    )}
-                  />
+                <Route path="/session-notes/:id" component={SessionNotes} />
+              </Switch>
+            ) : (
+              <Switch>
+                <Route
+                  exact
+                  path="/"
+                  render={props => (
+                    <Login
+                      {...props}
+                      handleSuccessfulLogin={handleSuccessfulLogin}
+                      handleUnsuccessfulLogin={handleUnsuccessfulLogin}
+                      handleCurrentUser={handleCurrentUser}
+                    />
+                  )}
+                />
 
-                  <Route
-                    path="/login"
-                    render={props => (
-                      <Login
-                        {...props}
-                        handleSuccessfulLogin={this.handleSuccessfulLogin}
-                        handleUnsuccessfulLogin={this.handleUnsuccessfulLogin}
-                        handleCurrentUser={this.handleCurrentUser}
-                        errorText={this.state.errorText}
-                      />
-                    )}
-                  />
-                </Switch>
-              )}
-            </div>
-          </BrowserRouter>
-        </div>
+                <Route
+                  path="/login"
+                  render={props => (
+                    <Login
+                      {...props}
+                      handleSuccessfulLogin={handleSuccessfulLogin}
+                      handleUnsuccessfulLogin={handleUnsuccessfulLogin}
+                      handleCurrentUser={handleCurrentUser}
+                    />
+                  )}
+                />
+              </Switch>
+            )}
+          </div>
+        </BrowserRouter>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default App;

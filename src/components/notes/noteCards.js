@@ -3,7 +3,6 @@ import React, { useState } from "react";
 const NoteCard = props => {
   const [notes, setNotes] = useState(props.note);
 
-  console.log(notes);
   return (
     <div className="notecard-wrapper">
       <div className="notecard-top-container">
