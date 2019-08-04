@@ -1,30 +1,17 @@
+// TODO: Context for handledeleteclick and students
 import React, { Component } from "react";
 import axios from "axios";
 
 import SessionForm from "../forms/sessionForm";
-import SideBar from "../forms/newSessionSidebar";
 
 export default class NewSessionForm extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      students: [],
-      studentToEdit: {}
+      students: []
     };
   }
-
-  clearStudentToEdit = () => {
-    this.setState({
-      studentToEdit: {}
-    });
-  };
-
-  handleEditClick = student => {
-    this.setState({
-      studentToEdit: student
-    });
-  };
 
   handleDeleteClick = student => {
     axios
@@ -73,21 +60,13 @@ export default class NewSessionForm extends Component {
     console.log("student to edit: ", this.state.studentToEdit);
     return (
       <div className="container">
-        <div className="grid-1fr-500px">
-          <SessionForm
-            studentToEdit={this.state.studentToEdit}
-            getStudents={this.getStudents}
-            handleSuccesfulFormSubmit={this.handleSuccesfulFormSubmit}
-            handleFormSubmissionError={this.handleFormSubmissionError}
-            clearStudentToEdit={this.clearStudentToEdit}
-          />
-
-          <SideBar
-            students={this.state.students}
-            handleDeleteClick={this.handleDeleteClick}
-            handleEditClick={this.handleEditClick}
-          />
-        </div>
+        <SessionForm
+          getStudents={this.getStudents}
+          handleSuccesfulFormSubmit={this.handleSuccesfulFormSubmit}
+          handleFormSubmissionError={this.handleFormSubmissionError}
+          students={this.state.students}
+          handleDeleteClick={this.handleDeleteClick}
+        />
       </div>
     );
   }

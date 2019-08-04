@@ -77,9 +77,6 @@ class SessionDetail extends Component {
   }
 
   handleDropdownRender = () => {
-    const mentors = this.props.mentors.map(mentor => {
-      return mentor;
-    });
     return (
       <form className="form-group">
         <select
@@ -88,10 +85,12 @@ class SessionDetail extends Component {
           value={this.state.selected_mentor}
           onChange={this.handleDropDownChange}
         >
-          <option>Select</option>
-          {mentors.map(mentor => {
+          <option defaultValue value="">
+            Mentor
+          </option>
+          {this.props.mentors.map(mentor => {
             return (
-              <option key={mentor.id}>
+              <option key={mentor._id}>
                 {`${mentor.first_name} ${mentor.last_name}`}
               </option>
             );
@@ -109,9 +108,13 @@ class SessionDetail extends Component {
         {role === "admin" &&
         session.assigned_to === "" &&
         !this.props.redis_data.includes(session._id) ? (
-          <button className="btn-primary" onClick={this.handleAssign}>
-            Assign
-          </button>
+          this.state.selected_mentor ? (
+            <button className="btn-primary" onClick={this.handleAssign}>
+              Assign
+            </button>
+          ) : (
+            <span className="btn-primary">Select a Mentor</span>
+          )
         ) : !this.props.redis_data.includes(session._id) ? (
           <Link
             className="btn-primary"
@@ -156,6 +159,7 @@ class SessionDetail extends Component {
 
   render() {
     console.log(this.state.current_user);
+    console.log("selected: ", this.state.selected_mentor);
 
     const student = this.state.single_session;
     console.log("student: ", student);
