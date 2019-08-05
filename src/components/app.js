@@ -1,6 +1,9 @@
 // TODO: Not authorized and no match
 // TODO: Set error text for login page
 // TODO: use of hookrouter instead of browserrouter
+// TODO: Expire cookie sooner
+// TODO: isLoading
+// TODO: truncate scrollbox lists (endless scroll)
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Cookie from "js-cookie";
