@@ -6,7 +6,7 @@ const Notes = props => {
 
   const renderNotes = () => {
     return student.info.reverse().map(note => {
-      return <NoteCard note={note} />;
+      return <NoteCard key={note._id} note={note} />;
     });
   };
 

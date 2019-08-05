@@ -31,12 +31,20 @@ const SessionDetail = props => {
     e.preventDefault();
 
     axios
-      .post("http://localhost:4000/mentors/search-name", searchData)
+      .post(
+        "https://rec-scheduler-api.herokuapp.com/mentors/search-name",
+        searchData
+      )
+      // .post("http://localhost:4000/mentors/search-name", searchData)
       .then(res => {
         axios
-          .put(`http://localhost:4000/students/assign-to/${id}`, {
-            assigned_to: res.data
-          })
+          .put(
+            `https://rec-scheduler-api.herokuapp.com/students/assign-to/${id}`,
+            {
+              // .put(`http://localhost:4000/students/assign-to/${id}`, {
+              assigned_to: res.data
+            }
+          )
           .then(() => {
             props.handleFilter();
           })

@@ -9,7 +9,10 @@ const NewSessionForm = props => {
 
   const handleDeleteClick = student => {
     axios
-      .delete(`http://localhost:4000/students/delete/${student._id}`)
+      // .delete(`http://localhost:4000/students/delete/${student._id}`)
+      .delete(
+        `https://rec-scheduler-api.herokuapp.com/students/delete/${student._id}`
+      )
       .then(res => {
         setStudents(
           students.filter(remaining => {
@@ -32,8 +35,8 @@ const NewSessionForm = props => {
 
   const getStudents = () => {
     axios
-      .get("http://localhost:4000/students")
-      // .get("https://rec-scheduler-api.herokuapp.com/students")
+      // .get("http://localhost:4000/students")
+      .get("https://rec-scheduler-api.herokuapp.com/students")
       .then(res => {
         setStudents([...res.data]);
       })

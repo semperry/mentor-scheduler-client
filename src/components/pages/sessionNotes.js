@@ -18,15 +18,22 @@ const SessionNotes = props => {
     e.preventDefault();
 
     axios
-      .post("http://localhost:4000/redis/complete", { id: id })
+      // .post("http://localhost:4000/redis/complete", { id: id })
+      .post("https://rec-scheduler-api.herokuapp.com/redis/complete", {
+        id: id
+      })
       .then(res => {
         console.log(res);
       })
       .then(() => {
-        axios.put(`http://localhost:4000/students/completed/${id}`, {
-          assigned_to: "",
-          last_submitted_by: `${mentor.first_name} ${mentor.last_name}`
-        });
+        // axios.put(`http://localhost:4000/students/completed/${id}`, {
+        axios.put(
+          `https://rec-scheduler-api.herokuapp.com/students/completed/${id}`,
+          {
+            assigned_to: "",
+            last_submitted_by: `${mentor.first_name} ${mentor.last_name}`
+          }
+        );
       })
       .catch(err => {
         console.log("completed err: ", err);
@@ -46,7 +53,8 @@ const SessionNotes = props => {
 
     e.preventDefault();
     axios
-      .put(`http://localhost:4000/students/notes/${id}`, {
+      // .put(`http://localhost:4000/students/notes/${id}`, {
+      .put(`https://rec-scheduler-api.herokuapp.com/students/notes/${id}`, {
         info: sendNotes
       })
       .then(res => {

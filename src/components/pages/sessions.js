@@ -31,7 +31,8 @@ const Sessions = props => {
 
   const getMentors = () => {
     axios
-      .get("http://localhost:4000/mentors")
+      // .get("http://localhost:4000/mentors")
+      .get("https://rec-scheduler-api.herokuapp.com/mentors")
       .then(res => {
         setMentors(res.data);
       })
@@ -47,8 +48,8 @@ const Sessions = props => {
 
   const getSessions = (filter = "sessions") => {
     axios
-      .get("http://localhost:4000/students")
-      // .get("https://rec-scheduler-api.herokuapp.com/students")
+      // .get("http://localhost:4000/students")
+      .get("https://rec-scheduler-api.herokuapp.com/students")
       .then(res => {
         if (filter === "sessions") {
           setFilteredSessions(
@@ -81,7 +82,8 @@ const Sessions = props => {
 
   const handleCompleted = students => {
     axios
-      .get(`http://localhost:4000/redis/completed`)
+      // .get(`http://localhost:4000/redis/completed`)
+      .get(`https://rec-scheduler-api.herokuapp.com/redis/completed`)
       .then(res => {
         setRedisData(res.data);
       })

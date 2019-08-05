@@ -15,7 +15,8 @@ const Auth = props => {
     };
 
     axios
-      .post("http://localhost:4000/mentors/login", loginData)
+      .post("https://rec-scheduler-api.herokuapp.com/mentors/login", loginData)
+      // .post("http://localhost:4000/mentors/login", loginData)
       .then(res => {
         if (res.status === 200) {
           props.handleCurrentUser(res.data);
@@ -26,7 +27,8 @@ const Auth = props => {
         }
       })
       .then(() => {
-        axios.post("http://localhost:4000/sessions/new", {
+        axios.post("https://rec-scheduler-api.herokuapp.com/sessions/new", {
+          // axios.post("http://localhost:4000/sessions/new", {
           email: loginData.email,
           session: Cookie.get("sesh")
         });
