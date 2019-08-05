@@ -32,6 +32,7 @@ const Auth = props => {
       .then(() => {
         axios.post("https://rec-scheduler-api.herokuapp.com/sessions/new", {
           // axios.post("http://localhost:4000/sessions/new", {
+          _id: uuidv1(),
           email: loginData.email,
           session: Cookie.get("sesh")
         });
