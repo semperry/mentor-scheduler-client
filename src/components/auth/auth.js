@@ -1,3 +1,6 @@
+// TODO: Multiple sessions with same email.
+// TODO: Handle Cookie expiration
+// TODO: Redis for cookie endpoint
 import React, { useState } from "react";
 import axios from "axios";
 import Cookie from "js-cookie";

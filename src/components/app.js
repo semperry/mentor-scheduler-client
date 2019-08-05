@@ -32,17 +32,17 @@ const App = () => {
   const [loggedInStatus, setLoggedInStatus] = useState("NOT_LOGGED_IN");
   const [currentUser, setCurrentUser] = useState("");
 
-  const checkCompletedSessions = () => {
-    axios
-      .get("https://rec-scheduler-api.herokuapp.com/sessions")
-      // .get("http://localhost:4000/sessions")
-      .then(res => {
-        setSessions(res.data);
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  };
+  // const checkCompletedSessions = () => {
+  //   axios
+  //     .get("https://rec-scheduler-api.herokuapp.com/sessions")
+  //     // .get("http://localhost:4000/sessions")
+  //     .then(res => {
+  //       setSessions(res.data);
+  //     })
+  //     .catch(err => {
+  //       console.log(err);
+  //     });
+  // };
 
   const handleCurrentUser = mentor => {
     setCurrentUser(mentor);
@@ -101,9 +101,9 @@ const App = () => {
           console.log(err);
         });
     } else if (!Cookie.get("sesh")) {
-      return;
+      return null;
     } else if (Cookie.get("sesh") && loggedInStatus === "LOGGED_IN") {
-      checkCompletedSessions();
+      // checkCompletedSessions();
       props.history.push("/");
     }
   };
