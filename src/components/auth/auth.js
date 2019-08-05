@@ -21,7 +21,7 @@ const Auth = props => {
         if (res.status === 200) {
           props.handleCurrentUser(res.data);
           props.handleSuccessfulLogin();
-          Cookie.set("sesh", res.data.id + uuidv1(), { expires: 7 });
+          Cookie.set("sesh", uuidv1(), { expires: 7 });
         } else {
           props.handleUnsuccessfulLogin();
         }
