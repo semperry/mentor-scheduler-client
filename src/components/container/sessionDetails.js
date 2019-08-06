@@ -1,3 +1,4 @@
+// TODO: Smooth out transition between session filters
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { withRouter } from "react-router";
@@ -147,6 +148,20 @@ const SessionDetail = props => {
     );
   };
 
+  const renderLastNote = () => {
+    if (singleSession.info) {
+      let notesArray = [];
+      singleSession.info.map(note => {
+        return (notesArray = [...notesArray, note.notes]);
+      });
+      return (
+        <div className="last-session-notes">{notesArray.reverse()[0]}</div>
+      );
+    } else {
+      null;
+    }
+  };
+
   useEffect(() => {
     filterSingleStudent();
   }, []);
@@ -156,21 +171,30 @@ const SessionDetail = props => {
       {singleSession !== {} ? (
         <div className="session-detail">
           <div className="session-detail-top">
-            <h1>
-              Name: {singleSession.first_name + " " + singleSession.last_name}
-            </h1>
-            <br />
-            <h1>Time: {singleSession.time}</h1>
-            <br />
-            <h2>Phone: {singleSession.phone}</h2>
-            <br />
-            <h2>Email: {singleSession.email}</h2>
-            <br />
-            {singleSession.special_instructions ? (
-              <div>
-                <h2>Instructions: {singleSession.special_instructions}</h2>
-              </div>
-            ) : null}
+            <div className="session-detail-student-info">
+              <h1>
+                Name: {singleSession.first_name + " " + singleSession.last_name}
+              </h1>
+              <br />
+              <h1>Time: {singleSession.time}</h1>
+              <br />
+              <h2>Phone: {singleSession.phone}</h2>
+              <br />
+              <h2>Email: {singleSession.email}</h2>
+              <br />
+              {singleSession.special_instructions ? (
+                <div className="special-instruction-wrapper">
+                  <h2>Instructions: {singleSession.special_instructions}</h2>
+                </div>
+              ) : null}
+            </div>
+            <div className="session-detail-notes-wrapper">
+              <h1>
+                Latest entry submitted by {`${singleSession.last_submitted_by}`}
+              </h1>
+              <br />
+              <div className="sb-notes">{renderLastNote()}</div>
+            </div>
           </div>
 
           <div className="session-detail-bottom">

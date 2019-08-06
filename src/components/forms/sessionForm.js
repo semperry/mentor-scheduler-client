@@ -1,3 +1,4 @@
+// Context for mentor role
 import React, { useState } from "react";
 import axios from "axios";
 import { times } from "../data";
@@ -120,10 +121,6 @@ const SessionForm = props => {
       });
   };
 
-  const handleSuccessfulFormSubmit = student => {
-    props.handleSuccessfulFormSubmit(student);
-  };
-
   return (
     <div className="grid-1fr-500px">
       <div className="session-form">
@@ -183,8 +180,10 @@ const SessionForm = props => {
           </div>
 
           <div className="form-group">
-            <select value={day} onChange={e => setDay(e.target.value)}>
-              <option>Select Day</option>
+            <select required value={day} onChange={e => setDay(e.target.value)}>
+              <option defaultValue value="">
+                Select Day
+              </option>
               <option>Sunday</option>
               <option>Monday</option>
               <option>Tuesday</option>
@@ -194,8 +193,14 @@ const SessionForm = props => {
               <option>Saturday</option>
             </select>
 
-            <select value={time} onChange={e => setTime(e.target.value)}>
-              <option>Time</option>
+            <select
+              required
+              value={time}
+              onChange={e => setTime(e.target.value)}
+            >
+              <option defaultValue value="">
+                Time
+              </option>
               {times.map(time => {
                 return <option key={time}>{time}</option>;
               })}
@@ -220,6 +225,7 @@ const SessionForm = props => {
         students={props.students}
         handleEditClick={handleEditClick}
         handleDeleteClick={props.handleDeleteClick}
+        role={props.role}
       />
     </div>
   );

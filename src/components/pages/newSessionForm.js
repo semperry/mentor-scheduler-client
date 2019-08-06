@@ -57,6 +57,7 @@ const NewSessionForm = props => {
         handleFormSubmissionError={handleFormSubmissionError}
         students={students}
         handleDeleteClick={handleDeleteClick}
+        role={props.role}
       />
     </div>
   );

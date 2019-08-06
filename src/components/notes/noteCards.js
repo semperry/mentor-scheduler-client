@@ -13,7 +13,7 @@ const NoteCard = props => {
           </div>
           <div className="note-group">
             <h1>Percentage:</h1>
-            <h1>{notes.percentage}</h1>
+            {notes.percentage ? <h1>{notes.percentage}</h1> : null}
           </div>
           <div className="note-group">
             <h1>Studied:</h1>

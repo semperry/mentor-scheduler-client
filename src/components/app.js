@@ -4,6 +4,7 @@
 // TODO: Expire cookie sooner
 // TODO: isLoading
 // TODO: truncate scrollbox lists (endless scroll)
+// TODO: every component gets currentUser from app
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Cookie from "js-cookie";
@@ -31,18 +32,6 @@ import Notes from "./pages/notes";
 const App = () => {
   const [loggedInStatus, setLoggedInStatus] = useState("NOT_LOGGED_IN");
   const [currentUser, setCurrentUser] = useState("");
-
-  // const checkCompletedSessions = () => {
-  //   axios
-  //     .get("https://rec-scheduler-api.herokuapp.com/sessions")
-  //     // .get("http://localhost:4000/sessions")
-  //     .then(res => {
-  //       setSessions(res.data);
-  //     })
-  //     .catch(err => {
-  //       console.log(err);
-  //     });
-  // };
 
   const handleCurrentUser = mentor => {
     setCurrentUser(mentor);
@@ -103,7 +92,6 @@ const App = () => {
     } else if (!Cookie.get("sesh")) {
       return null;
     } else if (Cookie.get("sesh") && loggedInStatus === "LOGGED_IN") {
-      // checkCompletedSessions();
       props.history.push("/");
     }
   };
@@ -128,7 +116,6 @@ const App = () => {
                 <Route
                   exact
                   path="/"
-                  path="/"
                   render={props => (
                     <Home {...props} currentUser={currentUser} />
                   )}
@@ -140,11 +127,14 @@ const App = () => {
                     <Sessions {...props} currentUser={currentUser} />
                   )}
                 />
-                {currentUser.role === "admin" ? (
-                  <Route path="/student/notes/:id" component={Notes} />
-                ) : null}
+                <Route path="/student/notes/:id" component={Notes} />
 
-                <Route path="/new-session" component={NewSessionForm} />
+                <Route
+                  path="/new-session"
+                  render={props => (
+                    <NewSessionForm {...props} role={currentUser.role} />
+                  )}
+                />
 
                 <Route path="/session-notes/:id" component={SessionNotes} />
               </Switch>

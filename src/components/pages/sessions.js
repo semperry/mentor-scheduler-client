@@ -1,6 +1,5 @@
 // TODO: If assigned, assign button should become reassign
 // TODO: full duplex implementation
-// TODO: Live api test
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import moment from "moment";

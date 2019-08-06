@@ -6,6 +6,31 @@
   justify-content: space-between;
   box-shadow: 8px 8px 30px 3px rgba(0, 0, 0, 0.4);
   border-radius: 7px;
+  .session-detail-top {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    .special-instruction-wrapper {
+    }
+
+    .session-detail-notes-wrapper {
+      width: 50%;
+
+      .sb-notes {
+        overflow: scroll;
+        height: 100%;
+
+        .last-session-notes {
+          font-size: 1.5em;
+        }
+      }
+    }
+  }
+  .session-detail-bottom {
+    .button-wrapper {
+      margin-top: 100px;
+    }
+  }
   .form-group {
     justify-content: flex-start;
 
