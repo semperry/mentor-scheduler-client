@@ -6,6 +6,7 @@ import SessionForm from "../forms/sessionForm";
 
 const NewSessionForm = props => {
   const [students, setStudents] = useState([]);
+  const [currentUser, setCurrentUser] = useState(props.currentUser);
 
   const handleDeleteClick = student => {
     axios
@@ -58,6 +59,7 @@ const NewSessionForm = props => {
         students={students}
         handleDeleteClick={handleDeleteClick}
         role={props.role}
+        currentUser={props.currentUser}
       />
     </div>
   );

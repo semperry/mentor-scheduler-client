@@ -1,6 +1,7 @@
 // TODO: Trims and data format pre submission
 import React, { useState } from "react";
 import { withRouter } from "react-router";
+import { Link } from "react-router-dom";
 import axios from "axios";
 
 const SessionNotes = props => {
@@ -9,19 +10,21 @@ const SessionNotes = props => {
   const [weekly_goal, setWeeklyGoal] = useState("");
   const [questions, setQuestions] = useState("");
   const [percentage, setPercentage] = useState("");
-  const [id, setId] = useState(props.location.state.student._id);
   const [mentor, setMentor] = useState(props.location.state.mentor);
   const [student, setStudent] = useState(props.location.state.student);
   const [submitText, setSubmitText] = useState("");
   const [errorText, setErrorText] = useState("");
+  const [extraNote, setExtraNote] = useState(
+    props.location.state.extraNote || false
+  );
 
   const handleComplete = e => {
     e.preventDefault();
 
     axios
-      // .post("http://localhost:4000/redis/complete", { id: id })
+      // .post("http://localhost:4000/redis/complete", { id: student._id })
       .post("https://rec-scheduler-api.herokuapp.com/redis/complete", {
-        id: id
+        id: student._id
       })
       .then(res => {
         console.log(res);
@@ -29,7 +32,9 @@ const SessionNotes = props => {
       .then(() => {
         // axios.put(`http://localhost:4000/students/completed/${id}`, {
         axios.put(
-          `https://rec-scheduler-api.herokuapp.com/students/completed/${id}`,
+          `https://rec-scheduler-api.herokuapp.com/students/completed/${
+            student._id
+          }`,
           {
             assigned_to: "",
             last_submitted_by: `${mentor.first_name} ${mentor.last_name}`
@@ -55,9 +60,12 @@ const SessionNotes = props => {
     e.preventDefault();
     axios
       // .put(`http://localhost:4000/students/notes/${id}`, {
-      .put(`https://rec-scheduler-api.herokuapp.com/students/notes/${id}`, {
-        info: sendNotes
-      })
+      .put(
+        `https://rec-scheduler-api.herokuapp.com/students/notes/${student._id}`,
+        {
+          info: sendNotes
+        }
+      )
       .then(res => {
         if (res.status === 200) {
           setSubmitText("Notes Submitted!");
@@ -69,6 +77,11 @@ const SessionNotes = props => {
       .catch(err => {
         console.log("put notes err: ", err);
       });
+  };
+
+  const handleExtraNote = e => {
+    e.preventDefault();
+    props.history.push(`/student/notes/${student._id}`);
   };
 
   return (
@@ -143,10 +156,14 @@ const SessionNotes = props => {
             </form>
           </div>
           <div className="ticket-detail__bottom">
-            {submitText !== "" ? (
+            {submitText !== "" && !extraNote ? (
               <button onClick={handleComplete} className="btn-primary">
                 Mark Complete
               </button>
+            ) : submitText !== "" && extraNote ? (
+              <Link className="btn-primary" to="/sessions">
+                Back to Sessions
+              </Link>
             ) : (
               <span>Submit notes above first</span>
             )}

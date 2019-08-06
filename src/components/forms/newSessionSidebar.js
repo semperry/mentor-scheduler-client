@@ -9,6 +9,7 @@ import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 const SideBar = props => {
   const [selectedDay, setSelectedDay] = useState(moment().format("dddd"));
   const [students, setStudents] = useState([]);
+  const [currentUser, setCurrentUser] = useState(props.currentUser);
 
   const handleEditClick = student => {
     props.handleEditClick(student);
@@ -31,7 +32,8 @@ const SideBar = props => {
                 to={{
                   pathname: `student/notes/${student._id}`,
                   state: {
-                    student: student
+                    student: student,
+                    currentUser: currentUser
                   }
                 }}
               >

@@ -226,6 +226,7 @@ const SessionForm = props => {
         handleEditClick={handleEditClick}
         handleDeleteClick={props.handleDeleteClick}
         role={props.role}
+        currentUser={props.currentUser}
       />
     </div>
   );

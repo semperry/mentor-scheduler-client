@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import NoteCard from "../notes/noteCards";
 import { Link } from "react-router-dom";
 
 const Notes = props => {
   const [student, setStudent] = useState(props.location.state.student);
-  const [currentUser, setCurrentUser] = useState(props.currentUser);
+  const [currentUser, setCurrentUser] = useState(
+    props.location.state.currentUser
+  );
 
   const renderNotes = () => {
     return student.info.reverse().map(note => {
@@ -22,7 +24,8 @@ const Notes = props => {
             pathname: `/session-notes/${student._id}`,
             state: {
               student: student,
-              currentUser: currentUser
+              mentor: currentUser,
+              extraNote: true
             }
           }}
         >

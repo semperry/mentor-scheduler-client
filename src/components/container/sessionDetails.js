@@ -125,7 +125,8 @@ const SessionDetail = props => {
             to={{
               pathname: `/student/notes/${id}`,
               state: {
-                student: singleSession
+                student: singleSession,
+                mentor: currentUser
               }
             }}
           >

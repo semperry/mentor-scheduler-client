@@ -109,6 +109,7 @@ const App = () => {
               <NavBar
                 loggedInStatus={loggedInStatus}
                 handleSuccessfulLogout={handleSuccessfulLogout}
+                currentUser={currentUser}
               />
             ) : null}
             {loggedInStatus === "LOGGED_IN" ? (
@@ -127,14 +128,19 @@ const App = () => {
                     <Sessions {...props} currentUser={currentUser} />
                   )}
                 />
-                <Route path="/student/notes/:id" component={Notes} />
 
                 <Route
                   path="/new-session"
                   render={props => (
-                    <NewSessionForm {...props} role={currentUser.role} />
+                    <NewSessionForm
+                      {...props}
+                      role={currentUser.role}
+                      currentUser={currentUser}
+                    />
                   )}
                 />
+
+                <Route path="/student/notes/:id" component={Notes} />
 
                 <Route path="/session-notes/:id" component={SessionNotes} />
               </Switch>
