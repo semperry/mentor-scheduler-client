@@ -1,10 +1,7 @@
 // TODO: Not authorized and no match
 // TODO: Set error text for login page
 // TODO: use of hookrouter instead of browserrouter
-// TODO: Expire cookie sooner
 // TODO: isLoading
-// TODO: truncate scrollbox lists (endless scroll)
-// TODO: every component gets currentUser from app
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Cookie from "js-cookie";
@@ -47,12 +44,12 @@ const App = () => {
 
   const handleSuccessfulLogout = () => {
     axios
-      .delete(
-        `https://rec-scheduler-api.herokuapp.com/sessions/delete/${Cookie.get(
-          "sesh"
-        )}`
-      )
-      // .delete(`http://localhost:4000/sessions/delete/${Cookie.get("sesh")}`)
+      // .delete(
+      //   `https://rec-scheduler-api.herokuapp.com/sessions/delete/${Cookie.get(
+      //     "sesh"
+      //   )}`
+      // )
+      .delete(`http://localhost:4000/sessions/delete/${Cookie.get("sesh")}`)
       .then(res => {
         if (res.status === 200) {
           Cookie.remove("sesh");
@@ -66,8 +63,8 @@ const App = () => {
 
   const handleGetUser = email => {
     axios
-      .get(`https://rec-scheduler-api.herokuapp.com/mentors/email/${email}`)
-      // .get(`http://localhost:4000/mentors/email/${email}`)
+      // .get(`https://rec-scheduler-api.herokuapp.com/mentors/email/${email}`)
+      .get(`http://localhost:4000/mentors/email/${email}`)
       .then(res => setCurrentUser(res.data))
       .then(() => setLoggedInStatus("LOGGED_IN"));
   };
@@ -75,12 +72,12 @@ const App = () => {
   const checkLoginStatus = () => {
     if (Cookie.get("sesh") && loggedInStatus === "NOT_LOGGED_IN") {
       axios
-        .get(
-          `https://rec-scheduler-api.herokuapp.com/sessions/${Cookie.get(
-            "sesh"
-          )}`
-        )
-        // .get(`http://localhost:4000/sessions/${Cookie.get("sesh")}`)
+        // .get(
+        //   `https://rec-scheduler-api.herokuapp.com/sessions/${Cookie.get(
+        //     "sesh"
+        //   )}`
+        // )
+        .get(`http://localhost:4000/sessions/${Cookie.get("sesh")}`)
         .then(res => {
           if (res.status === 200) {
             handleGetUser(res.data.email);

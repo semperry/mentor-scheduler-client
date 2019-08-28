@@ -1,4 +1,3 @@
-// TODO: Smooth out transition between session filters
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { withRouter } from "react-router";
@@ -7,11 +6,23 @@ import axios from "axios";
 const SessionDetail = props => {
   const [currentUser, setCurrentUser] = useState(props.currentUser);
   const [students, setStudents] = useState(props.students);
-  const [mentors, setMentors] = useState(props.mentors);
+  const [mentors, setMentors] = useState([]);
   const [id, setId] = useState(props.id);
   const [redisData, setRedisData] = useState(props.redisData);
   const [selectedMentor, setSelectedMentor] = useState("");
   const [singleSession, setSingleSession] = useState({});
+
+  const getMentors = () => {
+    axios
+      .get("http://localhost:4000/mentors")
+      // .get("https://rec-scheduler-api.herokuapp.com/mentors")
+      .then(res => {
+        setMentors(res.data);
+      })
+      .catch(err => {
+        console.log("getMentors Error: ", err);
+      });
+  };
 
   const filterSingleStudent = () => {
     setSingleSession(
@@ -32,22 +43,21 @@ const SessionDetail = props => {
     e.preventDefault();
 
     axios
-      .post(
-        "https://rec-scheduler-api.herokuapp.com/mentors/search-name",
-        searchData
-      )
-      // .post("http://localhost:4000/mentors/search-name", searchData)
+      // .post(
+      //   "https://rec-scheduler-api.herokuapp.com/mentors/search-name",
+      //   searchData
+      // )
+      .post("http://localhost:4000/mentors/search-name", searchData)
       .then(res => {
         axios
-          .put(
-            `https://rec-scheduler-api.herokuapp.com/students/assign-to/${id}`,
-            {
-              // .put(`http://localhost:4000/students/assign-to/${id}`, {
-              assigned_to: res.data
-            }
-          )
+          // .put(
+          // `https://rec-scheduler-api.herokuapp.com/students/assign-to/${id}`,
+          // {
+          .put(`http://localhost:4000/students/assign-to/${id}`, {
+            assigned_to: res.data
+          })
           .then(() => {
-            props.handleFilter();
+            props.handleFilter("sessions");
           })
           .catch(err => {
             console.log("put error", err);
@@ -165,6 +175,7 @@ const SessionDetail = props => {
 
   useEffect(() => {
     filterSingleStudent();
+    getMentors();
   }, []);
 
   return (
@@ -189,13 +200,16 @@ const SessionDetail = props => {
                 </div>
               ) : null}
             </div>
-            <div className="session-detail-notes-wrapper">
-              <h1>
-                Latest entry submitted by {`${singleSession.last_submitted_by}`}
-              </h1>
-              <br />
-              <div className="sb-notes">{renderLastNote()}</div>
-            </div>
+            {singleSession.last_submitted_by ? (
+              <div className="session-detail-notes-wrapper">
+                <h1>
+                  Latest entry submitted by{" "}
+                  {`${singleSession.last_submitted_by}`}
+                </h1>
+                <br />
+                <div className="sb-notes">{renderLastNote()}</div>
+              </div>
+            ) : null}
           </div>
 
           <div className="session-detail-bottom">

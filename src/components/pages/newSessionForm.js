@@ -36,8 +36,8 @@ const NewSessionForm = props => {
 
   const getStudents = () => {
     axios
-      // .get("http://localhost:4000/students")
-      .get("https://rec-scheduler-api.herokuapp.com/students")
+      .get("http://localhost:4000/students")
+      // .get("https://rec-scheduler-api.herokuapp.com/students")
       .then(res => {
         setStudents([...res.data]);
       })

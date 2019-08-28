@@ -20,30 +20,44 @@ const SessionNotes = props => {
 
   const handleComplete = e => {
     e.preventDefault();
-
-    axios
-      // .post("http://localhost:4000/redis/complete", { id: student._id })
-      .post("https://rec-scheduler-api.herokuapp.com/redis/complete", {
-        id: student._id
-      })
-      .then(res => {
-        console.log(res);
-      })
-      .then(() => {
-        // axios.put(`http://localhost:4000/students/completed/${id}`, {
-        axios.put(
-          `https://rec-scheduler-api.herokuapp.com/students/completed/${
-            student._id
-          }`,
-          {
+    if (extraNote) {
+      axios
+        .put(`http://localhost:4000/students/completed/${student._id}`, {
+          // axios.put(
+          //   `https://rec-scheduler-api.herokuapp.com/students/completed/${
+          //     student._id
+          //   }`,
+          //   {
+          assigned_to: "",
+          last_submitted_by: `${mentor.first_name} ${mentor.last_name}`
+        })
+        .catch(err => {
+          console.log("completed err: ", err);
+        });
+    } else {
+      axios
+        .post("http://localhost:4000/redis/complete", { id: student._id })
+        // .post("https://rec-scheduler-api.herokuapp.com/redis/complete", {
+        //   id: student._id
+        // })
+        .then(res => {
+          console.log(res);
+        })
+        .then(() => {
+          axios.put(`http://localhost:4000/students/completed/${student._id}`, {
+            // axios.put(
+            //   `https://rec-scheduler-api.herokuapp.com/students/completed/${
+            //     student._id
+            //   }`,
+            //   {
             assigned_to: "",
             last_submitted_by: `${mentor.first_name} ${mentor.last_name}`
-          }
-        );
-      })
-      .catch(err => {
-        console.log("completed err: ", err);
-      });
+          });
+        })
+        .catch(err => {
+          console.log("completed err: ", err);
+        });
+    }
     props.history.push("/sessions");
   };
 
@@ -59,13 +73,12 @@ const SessionNotes = props => {
 
     e.preventDefault();
     axios
-      // .put(`http://localhost:4000/students/notes/${id}`, {
-      .put(
-        `https://rec-scheduler-api.herokuapp.com/students/notes/${student._id}`,
-        {
-          info: sendNotes
-        }
-      )
+      .put(`http://localhost:4000/students/notes/${student._id}`, {
+        // .put(
+        //   `https://rec-scheduler-api.herokuapp.com/students/notes/${student._id}`,
+        //   {
+        info: sendNotes
+      })
       .then(res => {
         if (res.status === 200) {
           setSubmitText("Notes Submitted!");
@@ -78,12 +91,7 @@ const SessionNotes = props => {
         console.log("put notes err: ", err);
       });
   };
-
-  const handleExtraNote = e => {
-    e.preventDefault();
-    props.history.push(`/student/notes/${student._id}`);
-  };
-
+  console.log("mentor: ", mentor);
   return (
     <div className="container">
       <div className="ticket-page-wrapper">
@@ -161,9 +169,9 @@ const SessionNotes = props => {
                 Mark Complete
               </button>
             ) : submitText !== "" && extraNote ? (
-              <Link className="btn-primary" to="/sessions">
+              <button className="btn-primary" onClick={handleComplete}>
                 Back to Sessions
-              </Link>
+              </button>
             ) : (
               <span>Submit notes above first</span>
             )}

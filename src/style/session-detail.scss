@@ -17,7 +17,10 @@
       width: 50%;
 
       .sb-notes {
+        border-left: 1px solid black;
+        padding: 10px;
         overflow: scroll;
+        overflow-x: hidden;
         height: 100%;
 
         .last-session-notes {
