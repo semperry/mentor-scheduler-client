@@ -1,5 +1,7 @@
 // TODO: If assigned, assign button should become reassign
-// TODO: full duplex implementation
+// TODO: Concat filteredSessions in lieu of axios call
+// TODO: Fix memory leak in sessions
+// TODO: Fix Completed and assigned filters when empty
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import moment from "moment";
@@ -9,7 +11,6 @@ import SessionDetail from "../container/sessionDetails";
 
 const Sessions = props => {
   const [mentors, setMentors] = useState([]);
-  const [singleSession, setSingleSession] = useState([]);
   const [currentId, setCurrentId] = useState("");
   const [filteredSessions, setFilteredSessions] = useState([]);
   const [currentDay, setCurrentDay] = useState(
@@ -19,6 +20,8 @@ const Sessions = props => {
   );
   const [redisData, setRedisData] = useState([]);
   const [currentUser, setCurrentUser] = useState(props.currentUser);
+  const socket = new WebSocket("ws://rec-scheduler-wss.herokuapp.com");
+  // const socket = new WebSocket("ws://localhost:8080");
 
   const clearId = () => {
     setCurrentId("");
@@ -103,12 +106,53 @@ const Sessions = props => {
       });
   };
 
-  useEffect(() => {
-    getMentors();
-    {
-      currentUser.role === "admin" ? getSessions() : handleFilter("assigned");
+  const handleReceiveMessage = messageData => {
+    if (currentUser.role === "admin") {
+      getSessions();
+    } else {
+      handleFilter("assigned");
     }
-  }, []);
+    // if (messageData.assigned_to === currentUser._id) {
+    //   setFilteredSessions(filteredSessions.concat(JSON.parse(messageData)));
+    // } else {
+    //   null;
+    // }
+  };
+
+  const handleSendMessage = messageData => {
+    socket.send(JSON.stringify(messageData));
+  };
+
+  useEffect(() => {
+    if (filteredSessions.length === 0) {
+      if (currentUser.role === "admin") {
+        getSessions();
+      } else {
+        handleFilter("assigned");
+      }
+    } else {
+      null;
+    }
+
+    getMentors();
+
+    // {
+    //   currentUser.role === "admin" ? getSessions() : handleFilter("assigned");
+    // }
+
+    // socket.addEventListener("open", () => {
+    //   // socket.send("Connected!");
+    // });
+
+    socket.addEventListener("message", e => {
+      handleReceiveMessage(e.data);
+    });
+
+    return () =>
+      socket.removeEventListener("message", e => {
+        socket.close();
+      });
+  }, [filteredSessions]);
 
   const authorizedRoutes = () => {
     return (
@@ -163,6 +207,7 @@ const Sessions = props => {
             mentors={mentors}
             currentUser={currentUser}
             redisData={redisData}
+            handleSendMessage={handleSendMessage}
           />
         ) : null}
       </div>

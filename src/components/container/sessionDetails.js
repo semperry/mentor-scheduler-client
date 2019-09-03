@@ -12,6 +12,10 @@ const SessionDetail = props => {
   const [selectedMentor, setSelectedMentor] = useState("");
   const [singleSession, setSingleSession] = useState({});
 
+  const handleSendMessage = () => {
+    props.handleSendMessage(singleSession);
+  };
+
   const getMentors = () => {
     axios
       .get("http://localhost:4000/mentors")
@@ -58,6 +62,9 @@ const SessionDetail = props => {
           })
           .then(() => {
             props.handleFilter("sessions");
+          })
+          .then(() => {
+            handleSendMessage();
           })
           .catch(err => {
             console.log("put error", err);
@@ -174,8 +181,14 @@ const SessionDetail = props => {
   };
 
   useEffect(() => {
+    const ac = new AbortController();
+
     filterSingleStudent();
     getMentors();
+
+    return () => {
+      ac.abort();
+    };
   }, []);
 
   return (
