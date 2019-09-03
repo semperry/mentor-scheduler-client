@@ -63,11 +63,11 @@ const SessionForm = props => {
       handleStudentUpdate(studentToEdit);
     } else {
       axios
-        .post("http://localhost:4000/students/new", newSession)
-        // .post(
-        //   "https://rec-scheduler-api.herokuapp.com/students/new",
-        //   newSession
-        // )
+        // .post("http://localhost:4000/students/new", newSession)
+        .post(
+          "https://rec-scheduler-api.herokuapp.com/students/new",
+          newSession
+        )
         .then(() => {
           setFirstName("");
           setLastName("");
@@ -97,10 +97,8 @@ const SessionForm = props => {
 
     axios
       .put(
-        // `https://rec-scheduler-api.herokuapp.com/students/update-form/${
-        //   student._id
-        // }`,
-        `http://localhost:4000/students/update-form/${student._id}`,
+        `https://rec-scheduler-api.herokuapp.com/students/update-form/${student._id}`,
+        // `http://localhost:4000/students/update-form/${student._id}`,
         updatedSession
       )
       .then(() => {
