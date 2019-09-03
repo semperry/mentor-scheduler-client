@@ -1,7 +1,7 @@
+// TODO: Sort by time
 // TODO: If assigned, assign button should become reassign
 // TODO: Concat filteredSessions in lieu of axios call
-// TODO: Fix memory leak in sessions
-// TODO: Fix Completed and assigned filters when empty
+// TODO: Clean up ws issues when taking a ticket then rerouting back to sessions.
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import moment from "moment";
@@ -124,21 +124,21 @@ const Sessions = props => {
   };
 
   useEffect(() => {
-    if (filteredSessions.length === 0) {
-      if (currentUser.role === "admin") {
-        getSessions();
-      } else {
-        handleFilter("assigned");
-      }
-    } else {
-      null;
-    }
+    // if (filteredSessions.length === 0) {
+    //   if (currentUser.role === "admin") {
+    //     getSessions();
+    //   } else {
+    //     handleFilter("assigned");
+    //   }
+    // } else {
+    //   null;
+    // }
 
     getMentors();
 
-    // {
-    //   currentUser.role === "admin" ? getSessions() : handleFilter("assigned");
-    // }
+    {
+      currentUser.role === "admin" ? getSessions() : handleFilter("assigned");
+    }
 
     // socket.addEventListener("open", () => {
     //   // socket.send("Connected!");

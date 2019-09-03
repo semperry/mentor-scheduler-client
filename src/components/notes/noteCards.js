@@ -39,7 +39,7 @@ const NoteCard = props => {
       <div className="notecard-bottom-container">
         <div className="bottom-content">
           <h1>Mentor: {notes.submitted_by}</h1>
-          <button className="btn-primary">Something</button>
+          {/* <button className="btn-primary">Something</button> */}
         </div>
       </div>
     </div>
