@@ -2,6 +2,7 @@
 // TODO: If assigned, assign button should become reassign
 // TODO: Concat filteredSessions in lieu of axios call
 // TODO: Clean up ws issues when taking a ticket then rerouting back to sessions.
+// TODO: Reduce requests
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import moment from "moment";
