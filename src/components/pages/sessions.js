@@ -58,6 +58,7 @@ const Sessions = props => {
           setFilteredSessions(
             res.data.filter(student => {
               return (
+                !student.archived &&
                 student.assigned_to === "" &&
                 !redisData.includes(student._id) &&
                 student.day.toLowerCase() == currentDay
@@ -68,6 +69,7 @@ const Sessions = props => {
           setFilteredSessions(
             res.data.filter(student => {
               return (
+                !student.archived &&
                 student.assigned_to === currentUser.id &&
                 !redisData.includes(student._id) &&
                 student.day.toLowerCase() == currentDay

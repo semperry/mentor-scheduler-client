@@ -4,7 +4,7 @@ import moment from "moment";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faTrash, faArchive } from "@fortawesome/free-solid-svg-icons";
 
 const SideBar = props => {
   const [selectedDay, setSelectedDay] = useState(moment().format("dddd"));
@@ -15,8 +15,8 @@ const SideBar = props => {
     props.handleEditClick(student);
   };
 
-  const handleDeleteClick = student => {
-    props.handleDeleteClick(student);
+  const handleArchiveClick = student => {
+    props.handleArchiveClick(student);
   };
 
   const renderStudents = () => {
@@ -41,6 +41,9 @@ const SideBar = props => {
               </Link>
             </div>
             <div>
+              {student.archived ? <span>Archived</span> : <span>Active</span>}
+            </div>
+            <div>
               <span
                 style={{ color: "#00c274", marginRight: "15px" }}
                 onClick={() => handleEditClick(student)}
@@ -52,10 +55,10 @@ const SideBar = props => {
               {props.role === "admin" ? (
                 <span
                   style={{ color: "darkred" }}
-                  onClick={() => handleDeleteClick(student)}
+                  onClick={() => handleArchiveClick(student)}
                 >
-                  <FontAwesomeIcon icon="trash" />
-                  Delete
+                  <FontAwesomeIcon icon="archive" />
+                  {!student.archived ? "Archive" : "Activate"}
                 </span>
               ) : null}
             </div>

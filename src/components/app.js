@@ -12,11 +12,12 @@ import {
   faTrash,
   faSignOutAlt,
   faEdit,
-  faSpinner
+  faSpinner,
+  faArchive
 } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 
-library.add(faHome, faTrash, faSignOutAlt, faEdit, faSpinner);
+library.add(faHome, faTrash, faSignOutAlt, faEdit, faSpinner, faArchive);
 
 import Home from "./pages/home";
 import NavBar from "./navigation/navbar";
@@ -66,7 +67,8 @@ const App = () => {
       .get(`https://rec-scheduler-api.herokuapp.com/mentors/email/${email}`)
       // .get(`http://localhost:4000/mentors/email/${email}`)
       .then(res => setCurrentUser(res.data))
-      .then(() => setLoggedInStatus("LOGGED_IN"));
+      .then(() => setLoggedInStatus("LOGGED_IN"))
+      .catch(err => console.log("handleGetUser Error", err));
   };
 
   const checkLoginStatus = () => {
@@ -84,7 +86,7 @@ const App = () => {
           }
         })
         .catch(err => {
-          console.log(err);
+          console.log("checkLoginStatus Error: ", err);
         });
     } else if (!Cookie.get("sesh")) {
       return null;

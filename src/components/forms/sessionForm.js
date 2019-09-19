@@ -222,7 +222,7 @@ const SessionForm = props => {
       <SideBar
         students={props.students}
         handleEditClick={handleEditClick}
-        handleDeleteClick={props.handleDeleteClick}
+        handleArchiveClick={props.handleArchiveClick}
         role={props.role}
         currentUser={props.currentUser}
       />
