@@ -91,6 +91,13 @@
   .ticket-sidebar-wrapper {
     padding: 0px 42px;
 
+    .center-title {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: right;
+    }
+
     .underlined-header {
       font-family: "Ubuntu", sans-serif;
       font-weight: 700;

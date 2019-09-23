@@ -1,7 +1,6 @@
 // TODO: Sort by time
 // TODO: If assigned, assign button should become reassign
 // TODO: Concat filteredSessions in lieu of axios call
-// TODO: Clean up ws issues when taking a ticket then rerouting back to sessions.
 // TODO: Reduce requests
 import React, { useState, useEffect } from "react";
 import axios from "axios";
@@ -21,6 +20,8 @@ const Sessions = props => {
   );
   const [redisData, setRedisData] = useState([]);
   const [currentUser, setCurrentUser] = useState(props.currentUser);
+  const [currentFilter, setCurrentFilter] = useState("");
+
   const socket = new WebSocket("ws://rec-scheduler-wss.herokuapp.com");
   // const socket = new WebSocket("ws://localhost:8080");
 
@@ -59,7 +60,7 @@ const Sessions = props => {
             res.data.filter(student => {
               return (
                 !student.archived &&
-                student.assigned_to === "" &&
+                (student.assigned_to === null || student.assigned_to === "") &&
                 !redisData.includes(student._id) &&
                 student.day.toLowerCase() == currentDay
               );
@@ -126,26 +127,25 @@ const Sessions = props => {
     socket.send(JSON.stringify(messageData));
   };
 
-  useEffect(() => {
-    // if (filteredSessions.length === 0) {
-    //   if (currentUser.role === "admin") {
-    //     getSessions();
-    //   } else {
-    //     handleFilter("assigned");
-    //   }
-    // } else {
-    //   null;
-    // }
+  const getRedisData = () => {
+    axios
+      // .get(`http://localhost:4000/redis/completed`)
+      .get(`https://rec-scheduler-api.herokuapp.com/redis/completed`)
+      .then(res => {
+        setRedisData(res.data);
+      })
+      .catch(err => console.log("getRedisData err ", err));
+  };
 
+  useEffect(() => {
+    if (redisData.length === 0) {
+      getRedisData();
+    }
     getMentors();
 
     {
       currentUser.role === "admin" ? getSessions() : handleFilter("assigned");
     }
-
-    // socket.addEventListener("open", () => {
-    //   // socket.send("Connected!");
-    // });
 
     socket.addEventListener("message", e => {
       handleReceiveMessage(e.data);
@@ -156,6 +156,7 @@ const Sessions = props => {
         socket.close();
         setFilteredSessions([]);
       });
+    // return () => socket.close();
   }, []);
 
   const authorizedRoutes = () => {

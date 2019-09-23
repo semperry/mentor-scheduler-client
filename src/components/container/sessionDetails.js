@@ -115,7 +115,7 @@ const SessionDetail = props => {
     return (
       <div className="button-wrapper">
         {role === "admin" &&
-        session.assigned_to === "" &&
+        (session.assigned_to === "" || session.assigned_to === null) &&
         !redisData.includes(session._id) ? (
           selectedMentor ? (
             <button className="btn-primary" onClick={handleAssign}>
@@ -222,7 +222,8 @@ const SessionDetail = props => {
 
           <div className="session-detail-bottom">
             {currentUser.role === "admin" &&
-            singleSession.assigned_to === "" &&
+            (singleSession.assigned_to === "" ||
+              singleSession.assigned_to === null) &&
             !redisData.includes(singleSession._id)
               ? handleDropdownRender()
               : null}

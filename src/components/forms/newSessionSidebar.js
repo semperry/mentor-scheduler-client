@@ -40,7 +40,7 @@ const SideBar = props => {
                 {`${student.first_name} ${student.last_name}`}
               </Link>
             </div>
-            <div>
+            <div className="center-title">
               {student.archived ? <span>Archived</span> : <span>Active</span>}
             </div>
             <div>
@@ -72,8 +72,8 @@ const SideBar = props => {
     setStudents(
       props.students
         .sort((a, b) => {
-          const nameA = a.first_name.toLowerCase();
-          const nameB = b.first_name.toLowerCase();
+          const nameA = a.last_name.toLowerCase();
+          const nameB = b.last_name.toLowerCase();
           if (nameA < nameB) {
             return -1;
           }

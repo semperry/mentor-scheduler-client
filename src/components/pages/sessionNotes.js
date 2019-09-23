@@ -27,7 +27,7 @@ const SessionNotes = props => {
         .put(
           `https://rec-scheduler-api.herokuapp.com/students/completed/${student._id}`,
           {
-            assigned_to: "",
+            assigned_to: student.assigned_to,
             last_submitted_by: `${mentor.first_name} ${mentor.last_name}`
           }
         )
@@ -91,6 +91,8 @@ const SessionNotes = props => {
         console.log("put notes err: ", err);
       });
   };
+
+  console.log("extranote", extraNote);
 
   return (
     <div className="container">
