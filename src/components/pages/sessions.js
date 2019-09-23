@@ -1,6 +1,5 @@
 // TODO: Sort the sessions by time
 // TODO: Reassign Session feature
-// TODO: Assigned counter per mentor
 // TODO: Solve issue where we can't reassign if mentor is relieved.
 // TODO: Concat filteredSessions in lieu of axios call
 // TODO: Reduce amount of http requests
