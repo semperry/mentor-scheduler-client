@@ -1,7 +1,9 @@
-// TODO: Sort by time
-// TODO: If assigned, assign button should become reassign
+// TODO: Sort the sessions by time
+// TODO: Reassign Session feature
+// TODO: Assigned counter per mentor
+// TODO: Solve issue where we can't reassign if mentor is relieved.
 // TODO: Concat filteredSessions in lieu of axios call
-// TODO: Reduce requests
+// TODO: Reduce amount of http requests
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import moment from "moment";

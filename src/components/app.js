@@ -1,6 +1,5 @@
 // TODO: Not authorized and no match
 // TODO: Set error text for login page
-// TODO: use of hookrouter instead of browserrouter
 // TODO: isLoading
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";

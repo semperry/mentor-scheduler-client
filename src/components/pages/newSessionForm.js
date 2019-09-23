@@ -11,20 +11,6 @@ const NewSessionForm = props => {
 
   const handleArchiveClick = student => {
     axios
-      // .delete(`http://localhost:4000/students/delete/${student._id}`)
-      // .delete(
-      //   `https://rec-scheduler-api.herokuapp.com/students/delete/${student._id}`
-      // )
-      // .then(res => {
-      //   setStudents(
-      //     students.filter(remaining => {
-      //       return remaining._id !== student._id;
-      //     })
-      //   );
-      // })
-      // .catch(err => {
-      //   console.log("del err: ", err);
-      // });
       .put(
         `https://rec-scheduler-api.herokuapp.com/students/archive/${student._id}`,
         {
