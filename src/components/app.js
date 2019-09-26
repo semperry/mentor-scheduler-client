@@ -1,5 +1,4 @@
 // TODO: Not authorized and no match pages
-// TODO: Set error text for login page
 // TODO: Loading screen for login page
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";

@@ -9,6 +9,7 @@ import uuidv1 from "uuid";
 const Auth = props => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -37,6 +38,7 @@ const Auth = props => {
         });
       })
       .catch(err => {
+        setErrorMessage('Your Email or Password was incorrect')
         console.log("login error: ", err);
       });
 
@@ -53,6 +55,7 @@ const Auth = props => {
             Mentor Dashboard
           </div>
           <div className="subtitle">Login to view your mentor sessions</div>
+          <div className="error">{errorMessage}</div>
         </div>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
