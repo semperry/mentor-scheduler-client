@@ -38,7 +38,7 @@ const Auth = props => {
         });
       })
       .catch(err => {
-        setErrorMessage('Your Email or Password was incorrect')
+        setErrorMessage("Your Email or Password was incorrect");
         console.log("login error: ", err);
       });
 
@@ -66,6 +66,7 @@ const Auth = props => {
               placeholder="Email"
               value={email}
               onChange={e => setEmail(e.target.value)}
+              onFocus={e => setErrorMessage("")}
             />
           </div>
           <div className="form-group">
@@ -76,6 +77,7 @@ const Auth = props => {
               placeholder="password"
               value={password}
               onChange={e => setPassword(e.target.value)}
+              onFocus={e => setErrorMessage("")}
             />
           </div>
           <div className="button-wrapper">
