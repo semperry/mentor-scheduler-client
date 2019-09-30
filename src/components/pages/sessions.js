@@ -21,10 +21,7 @@ const Sessions = props => {
   );
   const [redisData, setRedisData] = useState([]);
   const [currentUser, setCurrentUser] = useState(props.currentUser);
-  const [currentFilter, setCurrentFilter] = useState("");
-
-  const socket = new WebSocket("ws://rec-scheduler-wss.herokuapp.com");
-  // const socket = new WebSocket("ws://localhost:8080");
+  const [socket, setSocket] = useState("");
 
   const clearId = () => {
     setCurrentId("");
@@ -51,8 +48,16 @@ const Sessions = props => {
     getSessions(filter);
   };
 
-  const getSessions = (filter = "sessions") => {
-    axios
+  const getSessions = async (filter = "sessions") => {
+    await axios
+      // .get(`http://localhost:4000/redis/completed`)
+      .get(`https://rec-scheduler-api.herokuapp.com/redis/completed`)
+      .then(res => {
+        setRedisData(res.data);
+      })
+      .catch(err => console.log("getRedisData err ", err));
+
+    await axios
       // .get("http://localhost:4000/students")
       .get("https://rec-scheduler-api.herokuapp.com/students")
       .then(res => {
@@ -128,20 +133,10 @@ const Sessions = props => {
     socket.send(JSON.stringify(messageData));
   };
 
-  const getRedisData = () => {
-    axios
-      // .get(`http://localhost:4000/redis/completed`)
-      .get(`https://rec-scheduler-api.herokuapp.com/redis/completed`)
-      .then(res => {
-        setRedisData(res.data);
-      })
-      .catch(err => console.log("getRedisData err ", err));
-  };
-
   useEffect(() => {
-    if (redisData.length === 0) {
-      getRedisData();
-    }
+    const socket = new WebSocket("wss://rec-scheduler-wss.herokuapp.com");
+    // const socket = new WebSocket("ws://localhost:8080");
+    setSocket(socket);
     getMentors();
 
     {
@@ -152,12 +147,7 @@ const Sessions = props => {
       handleReceiveMessage(e.data);
     });
 
-    return () =>
-      socket.removeEventListener("message", () => {
-        socket.close();
-        setFilteredSessions([]);
-      });
-    // return () => socket.close();
+    return () => socket.close();
   }, []);
 
   const authorizedRoutes = () => {
