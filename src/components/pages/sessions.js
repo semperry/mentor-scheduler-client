@@ -63,7 +63,7 @@ const Sessions = props => {
       .then(res => {
         if (filter === "sessions") {
           setFilteredSessions(
-            res.data.filter(student => {
+            returnsDataWithSortedTimes(res.data).filter(student => {
               return (
                 !student.archived &&
                 (student.assigned_to === null || student.assigned_to === "") &&
@@ -74,7 +74,7 @@ const Sessions = props => {
           );
         } else if (filter === "assigned") {
           setFilteredSessions(
-            res.data.filter(student => {
+            returnsDataWithSortedTimes(res.data).filter(student => {
               return (
                 !student.archived &&
                 student.assigned_to === currentUser.id &&
@@ -84,13 +84,39 @@ const Sessions = props => {
             })
           );
         } else if (filter === "completed") {
-          handleCompleted(res.data);
+          handleCompleted(returnsDataWithSortedTimes(res.data));
         }
       })
       .catch(err => {
         console.log("getSessions: ", err);
       });
   };
+
+  const returnsDataWithSortedTimes = data => {
+    const returnNum = stringTime => {
+      const final = []
+      const nums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+      for (let i = 0; i < stringTime.length; i++) {
+        if (stringTime[i] in nums ) final.push(stringTime[i])
+      }
+      if (final.length === 3 && stringTime.includes("p")) final[0] = Number(final[0]) + 12
+      else if (final.length === 4 && stringTime.includes("p") && (final[0] != 1 && final[1] != 2)) {}
+      return Number(final.join(""))
+    }
+    let sortedList = []
+    data.map( session => {
+      sortedList.push({
+        "time": returnNum(session.time),
+        "session": session
+      })
+    })
+    sortedList.sort((a, b) => (a.time > b.time) ? 1 : -1)
+    let finalSortedArray = []
+    sortedList.map( bunch => {
+      finalSortedArray.push(bunch.session)
+    })
+    return finalSortedArray
+  }
 
   const handleCompleted = students => {
     axios

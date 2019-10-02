@@ -13,10 +13,10 @@ const SessionCard = props => {
   };
 
   return (
-    <div
-      className="ticket-sidebar-wrapper__items-wrapper__item"
-      onClick={() => handleClick(session._id)}
-    >
+      <div
+        className="ticket-sidebar-wrapper__items-wrapper__item"
+        onClick={() => handleClick(session._id)}
+      >
       <div className="ticket-sidebar-wrapper__items-wrapper__item__left">
         {session.day
           .split("")
@@ -32,7 +32,7 @@ const SessionCard = props => {
         {session.time}
       </div>
     </div>
-  );
-};
+  )
+}
 
 export default SessionCard;
