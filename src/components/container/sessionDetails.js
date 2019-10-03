@@ -1,7 +1,3 @@
-// if admin and not assigned, assign button + dropdown
-// if anyone and assigned, reassign button + dropdown
-// if completed, view notes button - dropdown
-
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { withRouter } from "react-router";
@@ -118,7 +114,7 @@ const SessionDetail = props => {
     const session = singleSession;
 
     return (
-      <div className="button-wrapper">
+      <span>
         {role === "admin" &&
         (session.assigned_to === "" || session.assigned_to === null) &&
         !redisData.includes(session._id) ? (
@@ -129,24 +125,30 @@ const SessionDetail = props => {
           ) : (
             <span className="btn-primary">Select a Mentor</span>
           )
-        ) : !redisData.includes(session._id) && singleSession.assigned_to !== "" ? (
-          <div>
-          <button className="btn-primary" onClick={handleAssign}>
-              Reassign
-            </button>
-          <Link
-            className="btn-primary"
-            to={{
-              pathname: `/session-notes/${id}`,
-              state: {
-                student: singleSession,
-                mentor: currentUser
-              }
-            }}
-          >
-            Take Session
-          </Link>
-          </div>
+        ) : !redisData.includes(session._id) &&
+          singleSession.assigned_to !== "" ? (
+          <span>
+            {singleSession.assigned_by ? renderAssignedBy() : null}
+            {selectedMentor ? (
+              <button className="btn-primary" onClick={handleAssign}>
+                Reassign
+              </button>
+            ) : (
+              <span>Select a Mentor to reassign</span>
+            )}
+            <Link
+              className="btn-primary"
+              to={{
+                pathname: `/session-notes/${id}`,
+                state: {
+                  student: singleSession,
+                  mentor: currentUser
+                }
+              }}
+            >
+              Take Session
+            </Link>
+          </span>
         ) : redisData.includes(session._id) ? (
           <Link
             className="btn-primary"
@@ -164,10 +166,7 @@ const SessionDetail = props => {
         <button className="btn-cancel" onClick={handleCloseForm}>
           close
         </button>
-        <div>
-          {singleSession.assigned_by ? <h1>{singleSession.assigned_by}</h1> : null}
-        </div>
-      </div>
+      </span>
     );
   };
 
@@ -176,6 +175,15 @@ const SessionDetail = props => {
     return (
       <span>
         Completed By: <h2>{completedBy}</h2>
+      </span>
+    );
+  };
+
+  const renderAssignedBy = () => {
+    const assigned_by = singleSession.assigned_by;
+    return (
+      <span>
+        Assigned By: <h2>{assigned_by}</h2>
       </span>
     );
   };
@@ -237,7 +245,7 @@ const SessionDetail = props => {
             {!redisData.includes(singleSession._id)
               ? handleDropdownRender()
               : null}
-            {handleButtonRender()}
+            <div className="button-wrapper">{handleButtonRender()}</div>
           </div>
           {redisData.includes(singleSession._id)
             ? renderCompletedBy(singleSession)
