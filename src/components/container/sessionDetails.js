@@ -1,3 +1,7 @@
+// if admin and not assigned, assign button + dropdown
+// if anyone and assigned, reassign button + dropdown
+// if completed, view notes button - dropdown
+
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { withRouter } from "react-router";
@@ -58,7 +62,8 @@ const SessionDetail = props => {
             `https://rec-scheduler-api.herokuapp.com/students/assign-to/${id}`,
             {
               // .put(`http://localhost:4000/students/assign-to/${id}`, {
-              assigned_to: res.data
+              assigned_to: res.data,
+              assigned_by: `${currentUser.first_name} ${currentUser.last_name}`
             }
           )
           .then(() => {
@@ -124,7 +129,11 @@ const SessionDetail = props => {
           ) : (
             <span className="btn-primary">Select a Mentor</span>
           )
-        ) : !redisData.includes(session._id) ? (
+        ) : !redisData.includes(session._id) && singleSession.assigned_to !== "" ? (
+          <div>
+          <button className="btn-primary" onClick={handleAssign}>
+              Reassign
+            </button>
           <Link
             className="btn-primary"
             to={{
@@ -137,7 +146,8 @@ const SessionDetail = props => {
           >
             Take Session
           </Link>
-        ) : role === "admin" && redisData.includes(session._id) ? (
+          </div>
+        ) : redisData.includes(session._id) ? (
           <Link
             className="btn-primary"
             to={{
@@ -154,6 +164,9 @@ const SessionDetail = props => {
         <button className="btn-cancel" onClick={handleCloseForm}>
           close
         </button>
+        <div>
+          {singleSession.assigned_by ? <h1>{singleSession.assigned_by}</h1> : null}
+        </div>
       </div>
     );
   };
@@ -221,10 +234,7 @@ const SessionDetail = props => {
           </div>
 
           <div className="session-detail-bottom">
-            {currentUser.role === "admin" &&
-            (singleSession.assigned_to === "" ||
-              singleSession.assigned_to === null) &&
-            !redisData.includes(singleSession._id)
+            {!redisData.includes(singleSession._id)
               ? handleDropdownRender()
               : null}
             {handleButtonRender()}
