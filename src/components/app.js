@@ -1,4 +1,4 @@
-// TODO: Not authorized and no match pages
+// TODO: Not authorized page
 // TODO: Loading screen for login page
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
@@ -24,6 +24,7 @@ import NewSessionForm from "./pages/newSessionForm";
 import Login from "./pages/login";
 import SessionNotes from "./pages/sessionNotes";
 import Notes from "./pages/notes";
+import NoMatch from "./pages/noMatch";
 
 const App = () => {
   const [loggedInStatus, setLoggedInStatus] = useState("NOT_LOGGED_IN");
@@ -140,6 +141,7 @@ const App = () => {
                 <Route path="/student/notes/:id" component={Notes} />
 
                 <Route path="/session-notes/:id" component={SessionNotes} />
+                <Route component={NoMatch} />
               </Switch>
             ) : (
               <Switch>
