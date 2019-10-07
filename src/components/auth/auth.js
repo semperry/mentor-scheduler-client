@@ -5,11 +5,13 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookie from "js-cookie";
 import uuidv1 from "uuid";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Auth = props => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -22,6 +24,8 @@ const Auth = props => {
       .post("https://rec-scheduler-api.herokuapp.com/mentors/login", loginData)
       // .post("http://localhost:4000/mentors/login", loginData)
       .then(res => {
+        // debugger
+        setIsLoading(true)
         if (res.status === 200) {
           props.handleCurrentUser(res.data);
           props.handleSuccessfulLogin();
@@ -38,8 +42,11 @@ const Auth = props => {
         });
       })
       .catch(err => {
+        debugger
+        setIsLoading(true)
         setErrorMessage("Your Email or Password was incorrect");
         console.log("login error: ", err);
+        setIsLoading(false)
       });
 
     setEmail("");
@@ -81,9 +88,16 @@ const Auth = props => {
             />
           </div>
           <div className="button-wrapper">
+            {/* <FontAwesomeIcon icon="spinner" spin /> */}
+            {isLoading ? (
+              <div className="login-loader">
+                  <FontAwesomeIcon icon="spinner" spin />
+              </div>
+            ) : 
             <button className="btn-primary" type="submit">
               Login
             </button>
+            }
           </div>
         </form>
       </div>
