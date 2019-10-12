@@ -1,4 +1,5 @@
 // TODO: Trims and data format pre submission
+// TODO: Re-render sessions on props.history push because assigned stays after complete
 import React, { useState } from "react";
 import { withRouter } from "react-router";
 import { Link } from "react-router-dom";
@@ -57,7 +58,8 @@ const SessionNotes = props => {
           console.log("completed err: ", err);
         });
     }
-    props.history.push("/sessions");
+    // props.history.push("/sessions");
+    props.history.push("/");
   };
 
   const handleSubmitNotes = e => {
@@ -170,7 +172,7 @@ const SessionNotes = props => {
               </button>
             ) : submitText !== "" && extraNote ? (
               <button className="btn-primary" onClick={handleComplete}>
-                Back to Sessions
+                Back Home
               </button>
             ) : (
               <span>Submit notes above first</span>

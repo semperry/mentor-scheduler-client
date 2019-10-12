@@ -9,6 +9,7 @@ import SessionCard from "../container/sessionCard";
 import SessionDetail from "../container/sessionDetails";
 
 const Sessions = props => {
+  
   const [mentors, setMentors] = useState([]);
   const [currentId, setCurrentId] = useState("");
   const [filteredSessions, setFilteredSessions] = useState([]);
@@ -20,6 +21,7 @@ const Sessions = props => {
   const [redisData, setRedisData] = useState([]);
   const [currentUser, setCurrentUser] = useState(props.currentUser);
   const [socket, setSocket] = useState("");
+  const [activeButton, setActiveButton] = useState("");
 
   const clearId = () => {
     setCurrentId("");
@@ -42,52 +44,54 @@ const Sessions = props => {
   };
 
   const handleFilter = filter => {
+    setActiveButton(filter)
     clearId();
     getSessions(filter);
   };
 
-  const getSessions = async (filter = "sessions") => {
-    await axios
+  const getSessions = (filter = "sessions") => {
+    axios
       // .get(`http://localhost:4000/redis/completed`)
       .get(`https://rec-scheduler-api.herokuapp.com/redis/completed`)
       .then(res => {
+        console.log(res.data)
         setRedisData(res.data);
-      })
-      .catch(err => console.log("getRedisData err ", err));
-
-    await axios
-      // .get("http://localhost:4000/students")
-      .get("https://rec-scheduler-api.herokuapp.com/students")
-      .then(res => {
-        if (filter === "sessions") {
-          setFilteredSessions(
-            returnsDataWithSortedTimes(res.data).filter(student => {
-              return (
-                !student.archived &&
-                (student.assigned_to === null || student.assigned_to === "") &&
-                !redisData.includes(student._id) &&
-                student.day.toLowerCase() == currentDay
+      }).then(() => {
+        axios
+          // .get("http://localhost:4000/students")
+          .get("https://rec-scheduler-api.herokuapp.com/students")
+          .then(res => {
+            if (filter === "sessions") {
+              setFilteredSessions(
+                returnsDataWithSortedTimes(res.data).filter(student => {
+                  return (
+                    !student.archived &&
+                    (student.assigned_to === null || student.assigned_to === "") &&
+                    !redisData.includes(student._id) &&
+                    student.day.toLowerCase() == currentDay
+                  );
+                })
               );
-            })
-          );
-        } else if (filter === "assigned") {
-          setFilteredSessions(
-            returnsDataWithSortedTimes(res.data).filter(student => {
-              return (
-                !student.archived &&
-                student.assigned_to === currentUser.id &&
-                !redisData.includes(student._id) &&
-                student.day.toLowerCase() == currentDay
+            } else if (filter === "assigned") {
+              setFilteredSessions(
+                returnsDataWithSortedTimes(res.data).filter(student => {
+                  return (
+                    !student.archived &&
+                    student.assigned_to === currentUser.id &&
+                    !redisData.includes(student._id) &&
+                    student.day.toLowerCase() == currentDay
+                  );
+                })
               );
-            })
-          );
-        } else if (filter === "completed") {
-          handleCompleted(returnsDataWithSortedTimes(res.data));
-        }
+            } else if (filter === "completed") {
+              handleCompleted(returnsDataWithSortedTimes(res.data));
+            }
+          })
+          .catch(err => {
+            console.log("getSessions: ", err);
+          });
       })
-      .catch(err => {
-        console.log("getSessions: ", err);
-      });
+      .catch(err => console.log("getRedisData within Sessions err ", err));
   };
 
   const returnsDataWithSortedTimes = data => {
@@ -148,11 +152,11 @@ const Sessions = props => {
 
   const handleReceiveMessage = messageData => {
     handleFilter("assigned");
-    // if (messageData.assigned_to === currentUser._id) {
-    //   setFilteredSessions(filteredSessions.concat(JSON.parse(messageData)));
-    // } else {
-    //   null;
-    // }
+    //  if (messageData.assigned_to === currentUser._id) {
+    //    setFilteredSessions(filteredSessions.concat(JSON.parse(messageData)));
+    //  } else {
+    //    null;
+    //  }
   };
 
   const handleSendMessage = messageData => {
@@ -164,10 +168,7 @@ const Sessions = props => {
     // const socket = new WebSocket("ws://localhost:8080");
     setSocket(socket);
     getMentors();
-
-    {
-      currentUser.role === "admin" ? getSessions() : handleFilter("assigned");
-    }
+    handleFilter("assigned")
 
     socket.addEventListener("message", e => {
       handleReceiveMessage(e.data);
@@ -179,9 +180,9 @@ const Sessions = props => {
   const authorizedRoutes = () => {
     return (
       <div color="#00c274">
-        <button onClick={() => handleFilter("sessions")}>Sessions</button>
-        <button onClick={() => handleFilter("assigned")}>Assigned</button>
-        <button onClick={() => handleFilter("completed")}>Completed</button>
+        <button className={activeButton === "sessions" ? "active" : ""}onClick={() => handleFilter("sessions")}>Sessions</button>
+        <button className={activeButton === "assigned" ? "active" : ""}onClick={() => handleFilter("assigned")}>Assigned</button>
+        <button className={activeButton === "completed" ? "active" : ""}onClick={() => handleFilter("completed")}>Completed</button>
       </div>
     );
   };
@@ -194,8 +195,8 @@ const Sessions = props => {
             authorizedRoutes()
           ) : (
             <div color="#00c274">
-              <button onClick={() => handleFilter("assigned")}>Assigned</button>
-              <button onClick={() => handleFilter("completed")}>
+              <button className={activeButton === "assigned" ? "active" : ""}onClick={() => handleFilter("assigned")}>Assigned</button>
+              <button className={activeButton === "completed" ? "active" : ""}onClick={() => handleFilter("completed")}>
                 Completed
               </button>
             </div>
