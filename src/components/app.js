@@ -45,13 +45,13 @@ const App = () => {
     axios
       .delete(
         `https://rec-scheduler-api.herokuapp.com/sessions/delete/${Cookie.get(
-          "sesh"
+          "_scheduler_Session"
         )}`
       )
-      // .delete(`http://localhost:4000/sessions/delete/${Cookie.get("sesh")}`)
+      // .delete(`http://localhost:4000/sessions/delete/${Cookie.get("_scheduler_Session")}`)
       .then(res => {
         if (res.status === 200) {
-          Cookie.remove("sesh");
+          Cookie.remove("_scheduler_Session");
         } else {
           console.log("del res: ", res);
         }
@@ -70,14 +70,17 @@ const App = () => {
   };
 
   const checkLoginStatus = () => {
-    if (Cookie.get("sesh") && loggedInStatus === "NOT_LOGGED_IN") {
+    if (
+      Cookie.get("_scheduler_Session") &&
+      loggedInStatus === "NOT_LOGGED_IN"
+    ) {
       axios
         .get(
           `https://rec-scheduler-api.herokuapp.com/sessions/${Cookie.get(
-            "sesh"
+            "_scheduler_Session"
           )}`
         )
-        // .get(`http://localhost:4000/sessions/${Cookie.get("sesh")}`)
+        // .get(`http://localhost:4000/sessions/${Cookie.get("_scheduler_Session")}`)
         .then(res => {
           if (res.status === 200) {
             handleGetUser(res.data.email);
@@ -86,9 +89,12 @@ const App = () => {
         .catch(err => {
           console.log("checkLoginStatus Error: ", err);
         });
-    } else if (!Cookie.get("sesh")) {
+    } else if (!Cookie.get("_scheduler_Session")) {
       return null;
-    } else if (Cookie.get("sesh") && loggedInStatus === "LOGGED_IN") {
+    } else if (
+      Cookie.get("_scheduler_Session") &&
+      loggedInStatus === "LOGGED_IN"
+    ) {
       props.history.push("/");
     }
   };

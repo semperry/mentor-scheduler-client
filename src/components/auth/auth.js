@@ -1,10 +1,8 @@
 // TODO: Multiple sessions with same email.
-// TODO: Handle Cookie expiration through Redis (pending auth refactor)
-// TODO: Redis for cookie endpoint
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookie from "js-cookie";
-import uuidv1 from "uuid";
+import uuidv1 from "uuid/v1";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Auth = props => {
@@ -21,14 +19,15 @@ const Auth = props => {
     };
 
     axios
-      .post("https://rec-scheduler-api.herokuapp.com/mentors/login", loginData)
-      // .post("http://localhost:4000/mentors/login", loginData)
+      // .post("https://rec-scheduler-api.herokuapp.com/mentors/login", loginData)
+      .post("http://localhost:4000/mentors/login", loginData)
       .then(res => {
         setIsLoading(true);
         if (res.status === 200) {
+          Cookie.set("_scheduler_Session", res.data.session_id, { expires: 1 });
+          console.log(res);
           props.handleCurrentUser(res.data);
           props.handleSuccessfulLogin();
-          Cookie.set("sesh", res.data.id + uuidv1(), { expires: 1 });
         } else {
           props.handleUnsuccessfulLogin();
         }
@@ -36,8 +35,8 @@ const Auth = props => {
       .then(() => {
         axios.post("https://rec-scheduler-api.herokuapp.com/sessions/new", {
           // axios.post("http://localhost:4000/sessions/new", {
-          email: loginData.email,
-          session: Cookie.get("sesh")
+          email: `${loginData.email}`,
+          session: Cookie.get("_scheduler_Session")
         });
       })
       .catch(err => {

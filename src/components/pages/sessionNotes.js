@@ -92,8 +92,6 @@ const SessionNotes = props => {
       });
   };
 
-  console.log("extranote", extraNote);
-
   return (
     <div className="container">
       <div className="ticket-page-wrapper">
