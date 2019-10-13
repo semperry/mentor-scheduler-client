@@ -6,7 +6,7 @@ import axios from "axios";
 const SessionDetail = props => {
   const [currentUser, setCurrentUser] = useState(props.currentUser);
   const [students, setStudents] = useState(props.students);
-  const [mentors, setMentors] = useState([]);
+  const [mentors, setMentors] = useState(props.mentors);
   const [id, setId] = useState(props.id);
   const [redisData, setRedisData] = useState(props.redisData);
   const [selectedMentor, setSelectedMentor] = useState("");
@@ -204,7 +204,7 @@ const SessionDetail = props => {
 
   useEffect(() => {
     filterSingleStudent();
-    getMentors();
+    // getMentors();
   }, []);
 
   return (
