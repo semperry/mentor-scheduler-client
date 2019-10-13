@@ -50,12 +50,14 @@ const App = () => {
       )
       // .delete(`http://localhost:4000/sessions/delete/${Cookie.get("_scheduler_Session")}`)
       .then(res => {
+        Cookie.remove("_scheduler_Session");
+
         if (res.status === 200) {
-          Cookie.remove("_scheduler_Session");
         } else {
           console.log("del res: ", res);
         }
-      });
+      })
+      .catch(err => console.log("deleteSessionErr :", err));
     setLoggedInStatus("NOT_LOGGED_IN");
     setCurrentUser("");
   };
@@ -80,14 +82,16 @@ const App = () => {
             "_scheduler_Session"
           )}`
         )
-        // .get(`http://localhost:4000/sessions/${Cookie.get("_scheduler_Session")}`)
+        // .get(
+        //   `http://localhost:4000/sessions/${Cookie.get("_scheduler_Session")}`
+        // )
         .then(res => {
           if (res.status === 200) {
-            handleGetUser(res.data.email);
+            handleGetUser(res.data.email.split("--")[1]);
           }
         })
-        .catch(err => {
-          console.log("checkLoginStatus Error: ", err);
+        .catch((res, err) => {
+          Cookie.remove("_scheduler_Session");
         });
     } else if (!Cookie.get("_scheduler_Session")) {
       return null;

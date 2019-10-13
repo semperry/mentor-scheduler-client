@@ -19,13 +19,12 @@ const Auth = props => {
     };
 
     axios
-      // .post("https://rec-scheduler-api.herokuapp.com/mentors/login", loginData)
-      .post("http://localhost:4000/mentors/login", loginData)
+      .post("https://rec-scheduler-api.herokuapp.com/mentors/login", loginData)
+      // .post("http://localhost:4000/mentors/login", loginData)
       .then(res => {
         setIsLoading(true);
         if (res.status === 200) {
           Cookie.set("_scheduler_Session", res.data.session_id, { expires: 1 });
-          console.log(res);
           props.handleCurrentUser(res.data);
           props.handleSuccessfulLogin();
         } else {
@@ -35,7 +34,7 @@ const Auth = props => {
       .then(() => {
         axios.post("https://rec-scheduler-api.herokuapp.com/sessions/new", {
           // axios.post("http://localhost:4000/sessions/new", {
-          email: `${loginData.email}`,
+          email: `${uuidv1()}--${loginData.email}`,
           session: Cookie.get("_scheduler_Session")
         });
       })
