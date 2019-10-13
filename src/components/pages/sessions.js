@@ -9,7 +9,6 @@ import SessionCard from "../container/sessionCard";
 import SessionDetail from "../container/sessionDetails";
 
 const Sessions = props => {
-  
   const [mentors, setMentors] = useState([]);
   const [currentId, setCurrentId] = useState("");
   const [filteredSessions, setFilteredSessions] = useState([]);
@@ -44,7 +43,7 @@ const Sessions = props => {
   };
 
   const handleFilter = filter => {
-    setActiveButton(filter)
+    setActiveButton(filter);
     clearId();
     getSessions(filter);
   };
@@ -54,9 +53,9 @@ const Sessions = props => {
       // .get(`http://localhost:4000/redis/completed`)
       .get(`https://rec-scheduler-api.herokuapp.com/redis/completed`)
       .then(res => {
-        console.log(res.data)
         setRedisData(res.data);
-      }).then(() => {
+      })
+      .then(() => {
         axios
           // .get("http://localhost:4000/students")
           .get("https://rec-scheduler-api.herokuapp.com/students")
@@ -66,7 +65,8 @@ const Sessions = props => {
                 returnsDataWithSortedTimes(res.data).filter(student => {
                   return (
                     !student.archived &&
-                    (student.assigned_to === null || student.assigned_to === "") &&
+                    (student.assigned_to === null ||
+                      student.assigned_to === "") &&
                     !redisData.includes(student._id) &&
                     student.day.toLowerCase() == currentDay
                   );
@@ -168,7 +168,7 @@ const Sessions = props => {
     // const socket = new WebSocket("ws://localhost:8080");
     setSocket(socket);
     getMentors();
-    handleFilter("assigned")
+    handleFilter("assigned");
 
     socket.addEventListener("message", e => {
       handleReceiveMessage(e.data);
@@ -180,9 +180,24 @@ const Sessions = props => {
   const authorizedRoutes = () => {
     return (
       <div color="#00c274">
-        <button className={activeButton === "sessions" ? "active" : ""}onClick={() => handleFilter("sessions")}>Sessions</button>
-        <button className={activeButton === "assigned" ? "active" : ""}onClick={() => handleFilter("assigned")}>Assigned</button>
-        <button className={activeButton === "completed" ? "active" : ""}onClick={() => handleFilter("completed")}>Completed</button>
+        <button
+          className={activeButton === "sessions" ? "active" : ""}
+          onClick={() => handleFilter("sessions")}
+        >
+          Sessions
+        </button>
+        <button
+          className={activeButton === "assigned" ? "active" : ""}
+          onClick={() => handleFilter("assigned")}
+        >
+          Assigned
+        </button>
+        <button
+          className={activeButton === "completed" ? "active" : ""}
+          onClick={() => handleFilter("completed")}
+        >
+          Completed
+        </button>
       </div>
     );
   };
@@ -195,8 +210,16 @@ const Sessions = props => {
             authorizedRoutes()
           ) : (
             <div color="#00c274">
-              <button className={activeButton === "assigned" ? "active" : ""}onClick={() => handleFilter("assigned")}>Assigned</button>
-              <button className={activeButton === "completed" ? "active" : ""}onClick={() => handleFilter("completed")}>
+              <button
+                className={activeButton === "assigned" ? "active" : ""}
+                onClick={() => handleFilter("assigned")}
+              >
+                Assigned
+              </button>
+              <button
+                className={activeButton === "completed" ? "active" : ""}
+                onClick={() => handleFilter("completed")}
+              >
                 Completed
               </button>
             </div>
