@@ -16,6 +16,11 @@ const Home = props => {
 
   const [allMentors, setAllMentors] = useState(null);
   const [currentUser, setCurrentUser] = useState(props.currentUser);
+  const [ updateValue, setUpdateValue ] = useState(false)
+
+  const handleUpdateValue = () => {
+    setUpdateValue(!updateValue)
+  }
 
   useEffect(() => {
     axios
@@ -54,6 +59,7 @@ const Home = props => {
                 currentWeek={"week_one"}
                 currentUser={currentUser}
                 allMentors={allMentors}
+                updateValue={updateValue}
               />
 
               <div className="table-label">
@@ -69,6 +75,7 @@ const Home = props => {
                 currentWeek={"week_two"}
                 currentUser={currentUser}
                 allMentors={allMentors}
+                updateValue={updateValue}
               />
             </div>
           </div>
@@ -77,10 +84,10 @@ const Home = props => {
               <div  className="tables-section" >
                 <div className="two-tables-wrapper">
                   <div className="table-label" >This week</div>
-                    <ManageShifts allMentors={allMentors} currentWeek={"week_one"} />
+                    <ManageShifts allMentors={allMentors} currentWeek={"week_one"} handleUpdateValue={handleUpdateValue} />
 
                   <div className="table-label" >Next week</div>
-                    <ManageShifts allMentors={allMentors} currentWeek={"week_two"} />
+                    <ManageShifts allMentors={allMentors} currentWeek={"week_two"} handleUpdateValue={handleUpdateValue} />
             </div>
             </div>
             </div>

@@ -59,6 +59,7 @@ const ManageShifts = props => {
 	const closeModal = () => {
 		setStartTime("")
 		setEndTime("")
+		props.handleUpdateValue()
 		setShowModal(false)
 	}
 

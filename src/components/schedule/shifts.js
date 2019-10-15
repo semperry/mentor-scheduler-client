@@ -50,7 +50,7 @@ const Shifts = props => {
     setCurrentWeek(props.currentWeek);
     setAllMentors(props.allMentors);
     setCurrentUser(props.currentUser);
-  });
+  }, [props.updateValue]);
 
   return <div>{renderTable()}</div>;
 };
