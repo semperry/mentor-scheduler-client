@@ -1,7 +1,7 @@
 // TODO: Context for mentor role
 import React, { useState } from "react";
 import axios from "axios";
-import { times } from "../data";
+import customData from "../data";
 import SideBar from "./newSessionSidebar";
 
 const SessionForm = props => {
@@ -199,7 +199,7 @@ const SessionForm = props => {
               <option defaultValue value="">
                 Time
               </option>
-              {times.map(time => {
+              {customData.sessionTimes.map(time => {
                 return <option key={time}>{time}</option>;
               })}
             </select>

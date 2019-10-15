@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import axios from "axios"
-import {daysArr, shiftTimes as timeArr} from "../data"
+import customData from "../data"
 
 const ManageShifts = props => {
 	const [allMentors, setAllMentors] = useState(props.allMentors)
@@ -96,7 +96,7 @@ const ManageShifts = props => {
 					<thead>
 						<tr>
 							<th></th>
-							{daysArr.map( dayOfWeek => {
+							{customData.daysArr.map( dayOfWeek => {
 								return <th key={dayOfWeek}>{dayOfWeek}</th>
 							})}
 						</tr>
@@ -105,7 +105,7 @@ const ManageShifts = props => {
 					<tbody className="to-bold" key={mentor._id} >
 							<tr>
 								<th>{mentor.first_name}</th>
-								{daysArr.map((day, idx) => {
+								{customData.daysArr.map((day, idx) => {
 									return <th key={day, idx} onClick={ () => handleClick(weekObj[currentWeek][0][day], mentor, currentWeek, day)} className="editable" >{`${mentor[currentWeek][0][day].start} - ${mentor[currentWeek][0][day].end}`}</th>
 								})}
 							</tr>
@@ -132,14 +132,14 @@ const ManageShifts = props => {
 						<form className="schedule-block-row" onSubmit={handleModalSubmission}>
 							<select value={startTime} onChange={e => setStartTime(e.target.value)} >
 								<option >Start</option>
-								{timeArr.map(time => {
+								{customData.shiftTimes.map(time => {
 									return <option key={`${time}${startTime}`} value={time.length === 7 ? time[0] + time.slice(-2).toUpperCase() : time[0]+time[1] + time.slice(-2).toUpperCase() }>{time}</option>
 								})}
 								
 							</select>
 							<select value={endTime} onChange={e => setEndTime(e.target.value)} >
 								<option >End</option>
-								{timeArr.map(time => {
+								{customData.shiftTimes.map(time => {
 									return <option key={`${time}${endTime}`}value={time.length === 7 ? time[0] + time.slice(-2).toUpperCase() : time[0]+time[1] + time.slice(-2).toUpperCase() }>{time}</option>
 								})}
 							</select>
