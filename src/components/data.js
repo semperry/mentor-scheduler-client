@@ -16,6 +16,7 @@ const customData = {
     "9:00 pm",
     "10:00 pm"
   ],
+
   daysArr: [
     "sunday",
     "monday",
@@ -25,6 +26,7 @@ const customData = {
     "friday",
     "saturday"
   ],
+
   sessionTimes: [
     "8:00am",
     "8:30am",
@@ -54,7 +56,39 @@ const customData = {
     "8:30pm",
     "9:00pm",
     "9:30pm"
-  ]
+  ],
+  // Courtesy Chantay Riggs()
+  returnsDataWithSortedTimes: data => {
+    const returnNum = stringTime => {
+      const final = [];
+      const nums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+      for (let i = 0; i < stringTime.length; i++) {
+        if (stringTime[i] in nums) final.push(stringTime[i]);
+      }
+      if (final.length === 3 && stringTime.includes("p"))
+        final[0] = Number(final[0]) + 12;
+      else if (
+        final.length === 4 &&
+        stringTime.includes("p") &&
+        (final[0] != 1 && final[1] != 2)
+      ) {
+      }
+      return Number(final.join(""));
+    };
+    let sortedList = [];
+    data.map(session => {
+      sortedList.push({
+        time: returnNum(session.time),
+        session: session
+      });
+    });
+    sortedList.sort((a, b) => (a.time > b.time ? 1 : -1));
+    let finalSortedArray = [];
+    sortedList.map(bunch => {
+      finalSortedArray.push(bunch.session);
+    });
+    return finalSortedArray;
+  }
 };
 
 export default customData;
