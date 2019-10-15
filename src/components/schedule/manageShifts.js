@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react'
-import moment from "moment"
 import axios from "axios"
+import {daysArr, shiftTimes as timeArr} from "../data"
 
 const ManageShifts = props => {
 	const [allMentors, setAllMentors] = useState(props.allMentors)
-	const [ currentWeek, setCurrentWeek ] = useState(props.currentWeek)
+	const [currentWeek, setCurrentWeek] = useState(props.currentWeek)
 	const [showModal, setShowModal] = useState(false)
 	const [clickedDate, setClickedDate] = useState("nothin yet")
 	const [clickedMentor, setClickedMentor] = useState("nothin yet")
@@ -14,47 +14,27 @@ const ManageShifts = props => {
 	const [endTime, setEndTime] = useState("")
 
 	const modalRef = useRef()
-	const startOfCurrentWeek = moment().startOf("week")
-	const startOfNextWeek = moment().startOf("week").add(7, "days")
 	
 	const weekObj = {
 		"week_one": [
-			`Sun ${startOfCurrentWeek.format("MMM D")}`, 
-			`Mon ${startOfCurrentWeek.add(1, "days").format("MMM D")}`,
-			`Tue ${startOfCurrentWeek.add(1, "days").format("MMM D")}`,
-			`Wed ${startOfCurrentWeek.add(1, "days").format("MMM D")}`, 
-			`Thu ${startOfCurrentWeek.add(1, "days").format("MMM D")}`, 
-			`Fri ${startOfCurrentWeek.add(1, "days").format("MMM D")}`, 
-			`Sat ${startOfCurrentWeek.add(1, "days").format("MMM D")}`
+			{"sunday": `Sun ${props.startOfCurrentWeek.format("MMM D")}`}, 
+			{"monday" : `Mon ${props.startOfCurrentWeek.add(1, "days").format("MMM D")}`},
+			{"tuesday" : `Tue ${props.startOfCurrentWeek.add(1, "days").format("MMM D")}`},
+			{"wednesday" : `Wed ${props.startOfCurrentWeek.add(1, "days").format("MMM D")}`},
+			{"thursday" : `Thu ${props.startOfCurrentWeek.add(1, "days").format("MMM D")}`},
+			{"friday" : `Fri ${props.startOfCurrentWeek.add(1, "days").format("MMM D")}`},
+			{"saturday" : `Sat ${props.startOfCurrentWeek.add(1, "days").format("MMM D")}`}
 		],
 		"week_two": [
-			`Sun ${startOfNextWeek.format("MMM D")}`,
-			`Mon ${startOfNextWeek.add(1, "days").format("MMM D")}`,
-			`Tue ${startOfNextWeek.add(1, "days").format("MMM D")}`, 
-			`Wed ${startOfNextWeek.add(1, "days").format("MMM D")}`, 
-			`Thu ${startOfNextWeek.add(1, "days").format("MMM D")}`, 
-			`Fri ${startOfNextWeek.add(1, "days").format("MMM D")}`, 
-			`Sat ${startOfNextWeek.add(1, "days").format("MMM D")}`
+			{"sunday": `Sun ${props.startOfNextWeek.format("MMM D")}`},
+			{"monday": `Mon ${props.startOfNextWeek.add(1, "days").format("MMM D")}`},
+			{"tuesday": `Tue ${props.startOfNextWeek.add(1, "days").format("MMM D")}`},
+			{"wednesday": `Wed ${props.startOfNextWeek.add(1, "days").format("MMM D")}`},
+			{"thursday": `Thu ${props.startOfNextWeek.add(1, "days").format("MMM D")}`},
+			{"friday": `Fri ${props.startOfNextWeek.add(1, "days").format("MMM D")}`},
+			{"saturday": `Sat ${props.startOfNextWeek.add(1, "days").format("MMM D")}`}
 		]
 	}	
-
-	const timeArr = [
-		"8:00 am",
-		"9:00 am",
-		"10:00 am",
-		"11:00 am",
-		"12:00 pm",
-		"1:00 pm",
-		"2:00 pm",
-		"3:00 pm",
-		"4:00 pm",
-		"5:00 pm",
-		"6:00 pm",
-		"7:00 pm",
-		"8:00 pm",
-		"9:00 pm",
-		"10:00 pm"
-	]
 
 	const closeModal = () => {
 		setStartTime("")
@@ -105,7 +85,7 @@ const ManageShifts = props => {
 		return () => {
 		  document.removeEventListener("mousedown", handleClickOutside);
 		}
-	}, [showModal])
+	})
 
 	return (
 		<div>
@@ -116,7 +96,7 @@ const ManageShifts = props => {
 					<thead>
 						<tr>
 							<th></th>
-							{weekObj[currentWeek].map( dayOfWeek => {
+							{daysArr.map( dayOfWeek => {
 								return <th key={dayOfWeek}>{dayOfWeek}</th>
 							})}
 						</tr>
@@ -125,13 +105,9 @@ const ManageShifts = props => {
 					<tbody className="to-bold" key={mentor._id} >
 							<tr>
 								<th>{mentor.first_name}</th>
-								<th onClick={ () => handleClick(weekObj[currentWeek][0], mentor, currentWeek, "sunday")} className="editable" >{`${mentor[currentWeek][0].sunday.start} - ${mentor[currentWeek][0].sunday.end}`}</th>
-								<th onClick={ () => handleClick(weekObj[currentWeek][1], mentor, currentWeek, "monday")}    className="editable" >{`${mentor[currentWeek][0].monday.start} - ${mentor[currentWeek][0].monday.end}`}</th>
-								<th onClick={ () => handleClick(weekObj[currentWeek][2], mentor, currentWeek, "tuesday")}   className="editable" >{`${mentor[currentWeek][0].tuesday.start} - ${mentor[currentWeek][0].tuesday.end}`}</th>
-								<th onClick={ () => handleClick(weekObj[currentWeek][3], mentor, currentWeek, "wednesday")} className="editable" >{`${mentor[currentWeek][0].wednesday.start} - ${mentor[currentWeek][0].wednesday.end}`}</th>
-								<th onClick={ () => handleClick(weekObj[currentWeek][4], mentor, currentWeek, "thursday")}  className="editable" >{`${mentor[currentWeek][0].thursday.start} - ${mentor[currentWeek][0].thursday.end}`}</th>
-								<th onClick={ () => handleClick(weekObj[currentWeek][5], mentor, currentWeek, "friday")}    className="editable" >{`${mentor[currentWeek][0].friday.start} - ${mentor[currentWeek][0].friday.end}`}</th>
-								<th onClick={ () => handleClick(weekObj[currentWeek][6], mentor, currentWeek, "saturday")}  className="editable" >{`${mentor[currentWeek][0].saturday.start} - ${mentor[currentWeek][0].saturday.end}`}</th>
+								{daysArr.map((day, idx) => {
+									return <th key={day, idx} onClick={ () => handleClick(weekObj[currentWeek][0][day], mentor, currentWeek, day)} className="editable" >{`${mentor[currentWeek][0][day].start} - ${mentor[currentWeek][0][day].end}`}</th>
+								})}
 							</tr>
 						</tbody>
 				))}

@@ -1,18 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { daysArr } from "../data";
 
 const Shifts = props => {
   const [currentWeek, setCurrentWeek] = useState("");
   const [allMentors, setAllMentors] = useState([]);
   const [currentUser, setCurrentUser] = useState([]);
-  const [days, setDays] = useState([
-    "sunday",
-    "monday",
-    "tuesday",
-    "wednesday",
-    "thursday",
-    "friday",
-    "saturday"
-  ]);
+  const [days, setDays] = useState(daysArr);
 
   const renderTable = () => {
     return (

@@ -6,6 +6,10 @@ import ManageShifts from "../schedule/manageShifts";
 import Shifts from "../schedule/shifts";
 
 const Home = props => {
+  const [allMentors, setAllMentors] = useState(null);
+  const [currentUser, setCurrentUser] = useState(props.currentUser);
+  const [updateValue, setUpdateValue] = useState(false);
+
   const startOfCurrentWeek = moment().startOf("week");
   const startOfNextWeek = moment()
     .startOf("week")
@@ -14,13 +18,9 @@ const Home = props => {
     .format("dddd")
     .toLowerCase();
 
-  const [allMentors, setAllMentors] = useState(null);
-  const [currentUser, setCurrentUser] = useState(props.currentUser);
-  const [ updateValue, setUpdateValue ] = useState(false)
-
   const handleUpdateValue = () => {
-    setUpdateValue(!updateValue)
-  }
+    setUpdateValue(!updateValue);
+  };
 
   useEffect(() => {
     axios
@@ -81,15 +81,27 @@ const Home = props => {
           </div>
           {currentUser.role === "admin" ? (
             <div>
-              <div  className="tables-section" >
+              <div className="tables-section">
                 <div className="two-tables-wrapper">
-                  <div className="table-label" >This week</div>
-                    <ManageShifts allMentors={allMentors} currentWeek={"week_one"} handleUpdateValue={handleUpdateValue} />
+                  <div className="table-label">This week</div>
+                  <ManageShifts
+                    allMentors={allMentors}
+                    currentWeek={"week_one"}
+                    handleUpdateValue={handleUpdateValue}
+                    startOfCurrentWeek={startOfCurrentWeek}
+                    startOfNextWeek={startOfNextWeek}
+                  />
 
-                  <div className="table-label" >Next week</div>
-                    <ManageShifts allMentors={allMentors} currentWeek={"week_two"} handleUpdateValue={handleUpdateValue} />
-            </div>
-            </div>
+                  <div className="table-label">Next week</div>
+                  <ManageShifts
+                    allMentors={allMentors}
+                    currentWeek={"week_two"}
+                    handleUpdateValue={handleUpdateValue}
+                    startOfCurrentWeek={startOfCurrentWeek}
+                    startOfNextWeek={startOfNextWeek}
+                  />
+                </div>
+              </div>
             </div>
           ) : null}
           }
