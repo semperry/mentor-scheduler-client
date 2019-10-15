@@ -74,7 +74,15 @@ const Home = props => {
           </div>
           {currentUser.role === "admin" ? (
             <div>
-              <ManageShifts allMentors={allMentors} />
+              <div  className="tables-section" >
+                <div className="two-tables-wrapper">
+                  <div className="table-label" >This week</div>
+                    <ManageShifts allMentors={allMentors} currentWeek={"week_one"} />
+
+                  <div className="table-label" >Next week</div>
+                    <ManageShifts allMentors={allMentors} currentWeek={"week_two"} />
+            </div>
+            </div>
             </div>
           ) : null}
           }
