@@ -1,4 +1,3 @@
-// TODO: Context for mentor role
 import React, { useState } from "react";
 import axios from "axios";
 import customData from "../data";

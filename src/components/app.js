@@ -1,4 +1,4 @@
-// TODO: Not authorized page
+// TODO: Feature to track missed sessions
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Cookie from "js-cookie";
@@ -64,8 +64,10 @@ const App = () => {
 
   const handleGetUser = email => {
     axios
-      .get(`https://rec-scheduler-api.herokuapp.com/mentors/email/${email}`)
-      // .get(`http://localhost:4000/mentors/email/${email}`)
+      .post("https://rec-scheduler-api.herokuapp.com/mentors/email", {
+        email: email
+      })
+      // .post("http://localhost:4000/mentors/email", { email: email })
       .then(res => setCurrentUser(res.data))
       .then(() => setLoggedInStatus("LOGGED_IN"))
       .catch(err => console.log("handleGetUser Error", err));
