@@ -4,6 +4,7 @@ import axios from "axios";
 import moment from "moment";
 import ManageShifts from "../schedule/manageShifts";
 import Shifts from "../schedule/shifts";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Home = props => {
   const [allMentors, setAllMentors] = useState(null);
@@ -66,7 +67,16 @@ const Home = props => {
   return (
     <div className="home-wrapper">
       {allMentors === null || !currentUser ? (
-        <div> Loading... </div>
+        <div className="home-loader">
+          <FontAwesomeIcon
+            icon="spinner"
+            style={{
+              color: "#00cb78",
+              fontSize: "5em"
+            }}
+            spin
+          />
+        </div>
       ) : (
         <div>
           <div className="home-header">

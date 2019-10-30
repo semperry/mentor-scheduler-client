@@ -19,7 +19,13 @@ const Login = props => {
 
   return (
     <div className="homepage-wrapper">
-      <div className="video-container" />
+      <div className="video-container">
+        <video
+          autoPlay
+          loop
+          src="https://s3.amazonaws.com/bottega-devcamp/videos/B-Roll_1.mp4"
+        ></video>
+      </div>
       <Auth
         handleSuccessfulLogin={handleSuccessfulLogin}
         handleUnsuccessfulLogin={handleUnsuccessfulLogin}
