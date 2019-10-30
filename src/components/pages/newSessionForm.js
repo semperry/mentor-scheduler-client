@@ -54,7 +54,7 @@ const NewSessionForm = props => {
         handleFormSubmissionError={handleFormSubmissionError}
         students={students}
         handleArchiveClick={handleArchiveClick}
-        role={props.role}
+        roles={props.roles}
         currentUser={props.currentUser}
       />
     </div>

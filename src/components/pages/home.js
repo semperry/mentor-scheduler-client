@@ -7,7 +7,7 @@ import Shifts from "../schedule/shifts";
 
 const Home = props => {
   const [allMentors, setAllMentors] = useState(null);
-  const [currentUser, setCurrentUser] = useState(props.currentUser);
+  const [currentUser, setCurrentUser] = useState(null);
   const [updateValue, setUpdateValue] = useState(false);
 
   const startOfCurrentWeek = moment().startOf("week");
@@ -22,11 +22,45 @@ const Home = props => {
     setUpdateValue(!updateValue);
   };
 
+  const renderShiftManager = () => {
+    console.log(currentUser);
+    if (currentUser.roles.includes("admin")) {
+      return (
+        <div>
+          <div className="tables-section">
+            <div className="two-tables-wrapper">
+              <div className="table-label">This week</div>
+              <ManageShifts
+                allMentors={allMentors}
+                currentWeek={"week_one"}
+                handleUpdateValue={handleUpdateValue}
+                startOfCurrentWeek={startOfCurrentWeek}
+                startOfNextWeek={startOfNextWeek}
+              />
+
+              <div className="table-label">Next week</div>
+              <ManageShifts
+                allMentors={allMentors}
+                currentWeek={"week_two"}
+                handleUpdateValue={handleUpdateValue}
+                startOfCurrentWeek={startOfCurrentWeek}
+                startOfNextWeek={startOfNextWeek}
+              />
+            </div>
+          </div>
+        </div>
+      );
+    } else {
+      null;
+    }
+  };
+
   useEffect(() => {
     axios
       .get("https://rec-scheduler-api.herokuapp.com/mentors")
       // .get("http://localhost:4000/mentors")
       .then(response => setAllMentors(response.data))
+      .then(() => setCurrentUser(props.currentUser))
       .catch(error => console.log(error));
   }, []);
 
@@ -79,32 +113,7 @@ const Home = props => {
               />
             </div>
           </div>
-          {currentUser.role === "admin" ? (
-            <div>
-              <div className="tables-section">
-                <div className="two-tables-wrapper">
-                  <div className="table-label">This week</div>
-                  <ManageShifts
-                    allMentors={allMentors}
-                    currentWeek={"week_one"}
-                    handleUpdateValue={handleUpdateValue}
-                    startOfCurrentWeek={startOfCurrentWeek}
-                    startOfNextWeek={startOfNextWeek}
-                  />
-
-                  <div className="table-label">Next week</div>
-                  <ManageShifts
-                    allMentors={allMentors}
-                    currentWeek={"week_two"}
-                    handleUpdateValue={handleUpdateValue}
-                    startOfCurrentWeek={startOfCurrentWeek}
-                    startOfNextWeek={startOfNextWeek}
-                  />
-                </div>
-              </div>
-            </div>
-          ) : null}
-          }
+          {currentUser !== null ? renderShiftManager() : null}}
         </div>
       )}
     </div>

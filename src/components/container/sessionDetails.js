@@ -110,12 +110,12 @@ const SessionDetail = props => {
   };
 
   const handleButtonRender = () => {
-    const role = currentUser.role;
+    const roles = currentUser.roles;
     const session = singleSession;
 
     return (
       <span>
-        {role === "admin" &&
+        {roles.includes("admin") &&
         (session.assigned_to === "" || session.assigned_to === null) &&
         !redisData.includes(session._id) ? (
           selectedMentor ? (

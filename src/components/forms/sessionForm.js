@@ -222,7 +222,7 @@ const SessionForm = props => {
         students={props.students}
         handleEditClick={handleEditClick}
         handleArchiveClick={props.handleArchiveClick}
-        role={props.role}
+        roles={props.roles}
         currentUser={props.currentUser}
       />
     </div>

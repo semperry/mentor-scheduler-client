@@ -1,4 +1,6 @@
-// TODO: Feature to track missed sessions
+// TODO:
+//  Feature to track missed sessions
+//  Admin Dashboard
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Cookie from "js-cookie";
@@ -62,8 +64,8 @@ const App = () => {
     setCurrentUser("");
   };
 
-  const handleGetUser = email => {
-    axios
+  const handleGetUser = async email => {
+    await axios
       .post("https://rec-scheduler-api.herokuapp.com/mentors/email", {
         email: email
       })
@@ -143,7 +145,7 @@ const App = () => {
                   render={props => (
                     <NewSessionForm
                       {...props}
-                      role={currentUser.role}
+                      roles={currentUser.roles}
                       currentUser={currentUser}
                     />
                   )}

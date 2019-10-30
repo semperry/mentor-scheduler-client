@@ -1,6 +1,7 @@
-// TODO: Solve issue where we can't reassign if mentor is relieved.
-// TODO: Concat filteredSessions in lieu of axios call
-// TODO: Reduce amount of http requests
+// TODO
+//Solve issue where we can't reassign if mentor is relieved.
+//Concat filteredSessions in lieu of axios call
+//Reduce amount of http requests
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import moment from "moment";
@@ -179,7 +180,7 @@ const Sessions = props => {
     <div className="container">
       <div className="grid-500-1fr">
         <div color="#00c274">
-          {currentUser.role === "admin" ? (
+          {currentUser.roles.includes("admin") ? (
             authorizedRoutes()
           ) : (
             <div color="#00c274">

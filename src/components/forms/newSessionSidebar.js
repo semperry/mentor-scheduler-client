@@ -52,7 +52,7 @@ const SideBar = props => {
                 Edit
               </span>
 
-              {props.role === "admin" ? (
+              {props.roles.includes("admin") ? (
                 <span
                   style={{ color: "darkred" }}
                   onClick={() => handleArchiveClick(student)}
