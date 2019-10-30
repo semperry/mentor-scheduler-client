@@ -23,7 +23,6 @@ const Home = props => {
   };
 
   const renderShiftManager = () => {
-    console.log(currentUser);
     if (currentUser.roles.includes("admin")) {
       return (
         <div>

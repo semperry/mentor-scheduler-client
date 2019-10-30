@@ -11,6 +11,7 @@ const Auth = props => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = e => {
+    setIsLoading(true);
     e.preventDefault();
     const loginData = {
       email: email,
@@ -21,7 +22,6 @@ const Auth = props => {
       .post("https://rec-scheduler-api.herokuapp.com/mentors/login", loginData)
       // .post("http://localhost:4000/mentors/login", loginData)
       .then(res => {
-        setIsLoading(true);
         if (res.status === 200) {
           Cookie.set("_scheduler_Session", res.data.session_id, { expires: 1 });
           props.handleCurrentUser(res.data);
@@ -83,10 +83,16 @@ const Auth = props => {
             />
           </div>
           <div className="button-wrapper">
-            {/* <FontAwesomeIcon icon="spinner" spin /> */}
             {isLoading ? (
               <div className="login-loader">
-                <FontAwesomeIcon icon="spinner" spin />
+                <FontAwesomeIcon
+                  icon="spinner"
+                  style={{
+                    color: "#00cb78",
+                    fontSize: "1.5em"
+                  }}
+                  spin
+                />
               </div>
             ) : (
               <button className="btn-primary" type="submit">

@@ -30,6 +30,7 @@ import NoMatch from "./pages/noMatch";
 const App = () => {
   const [loggedInStatus, setLoggedInStatus] = useState("NOT_LOGGED_IN");
   const [currentUser, setCurrentUser] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleCurrentUser = mentor => {
     setCurrentUser(mentor);
@@ -62,6 +63,7 @@ const App = () => {
       .catch(err => console.log("deleteSessionErr :", err));
     setLoggedInStatus("NOT_LOGGED_IN");
     setCurrentUser("");
+    setIsLoading(false);
   };
 
   const handleGetUser = async email => {
@@ -98,13 +100,16 @@ const App = () => {
           Cookie.remove("_scheduler_Session");
         });
     } else if (!Cookie.get("_scheduler_Session")) {
+      setIsLoading(false);
       return null;
     } else if (
       Cookie.get("_scheduler_Session") &&
       loggedInStatus === "LOGGED_IN"
     ) {
+      setIsLoading(false);
       props.history.push("/");
     }
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -156,6 +161,17 @@ const App = () => {
                 <Route path="/session-notes/:id" component={SessionNotes} />
                 <Route component={NoMatch} />
               </Switch>
+            ) : isLoading ? (
+              <div className="home-loader">
+                <FontAwesomeIcon
+                  icon="spinner"
+                  style={{
+                    color: "#00cb78",
+                    fontSize: "5em"
+                  }}
+                  spin
+                />
+              </div>
             ) : (
               <Switch>
                 <Route
