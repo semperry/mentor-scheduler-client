@@ -186,6 +186,18 @@ const App = () => {
                     />
                   )}
                 />
+                <Route
+                  exact
+                  path="/sessions"
+                  render={props => (
+                    <Login
+                      {...props}
+                      handleSuccessfulLogin={handleSuccessfulLogin}
+                      handleUnsuccessfulLogin={handleUnsuccessfulLogin}
+                      handleCurrentUser={handleCurrentUser}
+                    />
+                  )}
+                />
 
                 <Route
                   path="/login"
