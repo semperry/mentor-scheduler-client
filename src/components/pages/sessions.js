@@ -12,6 +12,7 @@ import SessionDetail from "../container/sessionDetails";
 
 const Sessions = props => {
   const [mentors, setMentors] = useState([]);
+  const [allSessions, setAllSessions] = useState([]);
   const [currentId, setCurrentId] = useState("");
   const [filteredSessions, setFilteredSessions] = useState([]);
   const [currentDay, setCurrentDay] = useState(
@@ -23,6 +24,7 @@ const Sessions = props => {
   const [currentUser, setCurrentUser] = useState(props.currentUser);
   const [socket, setSocket] = useState("");
   const [activeButton, setActiveButton] = useState("");
+  const [assignedCount, setAssignedCount] = useState(0);
 
   const clearId = () => {
     setCurrentId("");
@@ -50,7 +52,7 @@ const Sessions = props => {
     getSessions(filter);
   };
 
-  const getSessions = (filter = "sessions") => {
+  const getSessions = filter => {
     axios
       // .get(`http://localhost:4000/redis/completed`)
       .get(`https://rec-scheduler-api.herokuapp.com/redis/completed`)
@@ -62,6 +64,7 @@ const Sessions = props => {
           // .get("http://localhost:4000/students")
           .get("https://rec-scheduler-api.herokuapp.com/students")
           .then(res => {
+            setAllSessions(res.data);
             if (filter === "sessions") {
               setFilteredSessions(
                 customData
@@ -136,6 +139,26 @@ const Sessions = props => {
   const handleSendMessage = messageData => {
     socket.send(JSON.stringify(messageData));
   };
+
+  useEffect(() => {
+    setAssignedCount(
+      allSessions.filter(students => {
+        return (
+          !students.archived &&
+          students.assigned_to === currentUser.id &&
+          !redisData.includes(students._id) &&
+          students.day.toLowerCase() == currentDay
+        );
+      }).length
+    );
+    
+    document.title =
+      assignedCount === 0
+        ? "No Sessions Assigned"
+        : `You Have ${assignedCount} Sessions`;
+
+      return () => document.title = "Bottega Scheduler"
+  }, [allSessions, filteredSessions]);
 
   useEffect(() => {
     const socket = new WebSocket("wss://rec-scheduler-wss.herokuapp.com");
