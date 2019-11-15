@@ -10,6 +10,7 @@
     .active {
       border-bottom: 1px solid #00c274;
       font-weight: bold;
+      margin-bottom: 25px;
     }
 
     .task-wrapper {
@@ -20,9 +21,7 @@
 
     .scroll-box {
       height: calc(100vh - 300px) !important;
-      overflow: scroll;
-      border: 1px solid rgba(0, 0, 0, 0.2);
-      border-radius: 7px;
+      @include scrollBox();
 
       .ticket-sidebar-wrapper {
         padding: 0px 42px;

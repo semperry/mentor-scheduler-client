@@ -19,9 +19,9 @@
       .sb-notes {
         border-left: 1px solid black;
         padding: 10px;
-        overflow: scroll;
-        overflow-x: hidden;
+        // height: calc(100vh - 300px) !important;
         height: 100%;
+        @include scrollBox();
 
         .last-session-notes {
           font-size: 1.5em;

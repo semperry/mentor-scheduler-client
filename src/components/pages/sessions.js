@@ -151,13 +151,17 @@ const Sessions = props => {
         );
       }).length
     );
-    
+
     document.title =
       assignedCount === 0
         ? "No Sessions Assigned"
-        : `You Have ${assignedCount} Sessions`;
+        : assignedCount === 1
+        ? "You Have 1 Session"
+        : assignedCount === 1
+        ? `You Have ${assignedCount} Sessions`
+        : null;
 
-      return () => document.title = "Bottega Scheduler"
+    return () => (document.title = "Bottega Scheduler");
   }, [allSessions, filteredSessions]);
 
   useEffect(() => {
