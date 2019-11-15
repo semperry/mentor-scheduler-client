@@ -157,7 +157,7 @@ const Sessions = props => {
         ? "No Sessions Assigned"
         : assignedCount === 1
         ? "You Have 1 Session"
-        : assignedCount === 1
+        : assignedCount > 1
         ? `You Have ${assignedCount} Sessions`
         : null;
 
@@ -168,14 +168,17 @@ const Sessions = props => {
     const socket = new WebSocket("wss://rec-scheduler-wss.herokuapp.com");
     // const socket = new WebSocket("ws://localhost:8080");
     setSocket(socket);
-    getMentors();
-    handleFilter("assigned");
 
     socket.addEventListener("message", e => {
       handleReceiveMessage(e.data);
     });
 
     return () => socket.close();
+  }, []);
+
+  useEffect(() => {
+    getMentors();
+    handleFilter("assigned");
   }, []);
 
   const authorizedRoutes = () => {
