@@ -16,18 +16,6 @@ const SessionDetail = props => {
     props.handleSendMessage(singleSession);
   };
 
-  const getMentors = () => {
-    axios
-      // .get("http://localhost:4000/mentors")
-      .get("https://rec-scheduler-api.herokuapp.com/mentors")
-      .then(res => {
-        setMentors(res.data);
-      })
-      .catch(err => {
-        console.log("getMentors Error: ", err);
-      });
-  };
-
   const filterSingleStudent = () => {
     setSingleSession(
       students.filter(student => {
@@ -62,9 +50,9 @@ const SessionDetail = props => {
               assigned_by: `${currentUser.first_name} ${currentUser.last_name}`
             }
           )
-          .then(() => {
-            props.handleFilter("sessions");
-          })
+          // .then(() => {
+          //   props.handleFilter("sessions");
+          // })
           .then(() => {
             handleSendMessage();
           })
