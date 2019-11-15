@@ -137,6 +137,10 @@ const Sessions = props => {
 
   const handleReceiveMessage = messageData => {
     if (messageData.assigned_to === currentUser._id) {
+      setTimeout(() => {
+        document.title = "New Assigned!";
+      }, 500);
+
       handleFilter("assigned");
       //  setFilteredSessions(filteredSessions.concat(JSON.parse(messageData)));
     } else {
