@@ -26,6 +26,14 @@ const Sessions = props => {
   const [activeButton, setActiveButton] = useState("");
   const [assignedCount, setAssignedCount] = useState(0);
 
+  const filterAssigned = student => {
+    setFilteredSessions(
+      filteredSessions.filter(session => {
+        session._id !== student._id;
+      })
+    );
+  };
+
   const clearId = () => {
     setCurrentId("");
   };
@@ -128,12 +136,12 @@ const Sessions = props => {
   };
 
   const handleReceiveMessage = messageData => {
-    handleFilter("assigned");
-    //  if (messageData.assigned_to === currentUser._id) {
-    //    setFilteredSessions(filteredSessions.concat(JSON.parse(messageData)));
-    //  } else {
-    //    null;
-    //  }
+    if (messageData.assigned_to === currentUser._id) {
+      handleFilter("assigned");
+      //  setFilteredSessions(filteredSessions.concat(JSON.parse(messageData)));
+    } else {
+      null;
+    }
   };
 
   const handleSendMessage = messageData => {
@@ -258,6 +266,7 @@ const Sessions = props => {
             currentUser={currentUser}
             redisData={redisData}
             handleSendMessage={handleSendMessage}
+            filterAssigned={filterAssigned}
           />
         ) : null}
       </div>

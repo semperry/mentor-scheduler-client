@@ -2,7 +2,6 @@
 // TODO: Re-render sessions on props.history push because assigned stays after complete
 import React, { useState } from "react";
 import { withRouter, Redirect } from "react-router";
-import { Link } from "react-router-dom";
 import axios from "axios";
 
 const SessionNotes = props => {
@@ -17,7 +16,6 @@ const SessionNotes = props => {
   const [extraNote, setExtraNote] = useState(
     props.location.state.extraNote || false
   );
-  const [toSessions, setToSessions] = useState(false);
 
   const handleComplete = e => {
     e.preventDefault();
@@ -58,8 +56,6 @@ const SessionNotes = props => {
           console.log("completed err: ", err);
         });
     }
-    setToSessions(true);
-    // props.history.push("/sessions");
     // props.history.push("/");
   };
 
@@ -94,98 +90,94 @@ const SessionNotes = props => {
       });
   };
 
-  if (toSessions) {
-    return <Redirect to="/" />;
-  } else {
-    return (
-      <div className="container">
-        <div className="ticket-page-wrapper">
-          <div className="ticket-detail">
-            <div className="ticket-detail__top__heading">
-              <h1>{`${student.first_name} ${student.last_name}`}</h1>
-            </div>
-            <br />
-            <h1>{student.phone}</h1>
-            <br />
+  return (
+    <div className="container">
+      <div className="ticket-page-wrapper">
+        <div className="ticket-detail">
+          <div className="ticket-detail__top__heading">
+            <h1>{`${student.first_name} ${student.last_name}`}</h1>
+          </div>
+          <br />
+          <h1>{student.phone}</h1>
+          <br />
 
-            <h1>{student.email}</h1>
-            <br />
+          <h1>{student.email}</h1>
+          <br />
 
-            <h2>{student.special_instructions}</h2>
+          <h2>{student.special_instructions}</h2>
 
-            <div className="comments-container__form-container">
-              <form onSubmit={handleSubmitNotes}>
-                <div className="form-group">
-                  <input
-                    className="text-field"
-                    type="text"
-                    value={hours_studied}
-                    onChange={e => setHoursStudied(e.target.value)}
-                    placeholder="Hours Studied"
-                  />
+          <div className="comments-container__form-container">
+            <form onSubmit={handleSubmitNotes}>
+              <div className="form-group">
+                <input
+                  className="text-field"
+                  type="text"
+                  value={hours_studied}
+                  onChange={e => setHoursStudied(e.target.value)}
+                  placeholder="Hours Studied"
+                />
 
-                  <input
-                    className="text-field"
-                    type="text"
-                    value={weekly_goal}
-                    onChange={e => setWeeklyGoal(e.target.value)}
-                    placeholder="Weekly Goal"
-                  />
-                </div>
-                <div className="form-group">
-                  <input
-                    className="text-field"
-                    type="text"
-                    value={percentage}
-                    onChange={e => setPercentage(e.target.value)}
-                    placeholder="Percentage Complete"
-                  />
+                <input
+                  className="text-field"
+                  type="text"
+                  value={weekly_goal}
+                  onChange={e => setWeeklyGoal(e.target.value)}
+                  placeholder="Weekly Goal"
+                />
+              </div>
+              <div className="form-group">
+                <input
+                  className="text-field"
+                  type="text"
+                  value={percentage}
+                  onChange={e => setPercentage(e.target.value)}
+                  placeholder="Percentage Complete"
+                />
 
-                  <input
-                    className="text-field"
-                    type="text"
-                    value={questions}
-                    onChange={e => setQuestions(e.target.value)}
-                    placeholder="Questions"
-                  />
-                </div>
-                <div className="form-group">
-                  <textarea
-                    required
-                    className="text-area-field"
-                    value={notes}
-                    onChange={e => setNotes(e.target.value)}
-                    style={{ height: 150 }}
-                    placeholder="Session Notes"
-                  />
-                </div>
-                {submitText === "" ? (
-                  <button type="submit" className="btn-primary">
-                    Submit Notes
-                  </button>
-                ) : (
-                  <h2>{submitText}</h2>
-                )}
-              </form>
-            </div>
-            <div className="ticket-detail__bottom">
-              {submitText !== "" && !extraNote ? (
-                <button onClick={handleComplete} className="btn-primary">
-                  Mark Complete
-                </button>
-              ) : submitText !== "" && extraNote ? (
-                <button className="btn-primary" onClick={handleComplete}>
-                  Back Home
+                <input
+                  className="text-field"
+                  type="text"
+                  value={questions}
+                  onChange={e => setQuestions(e.target.value)}
+                  placeholder="Questions"
+                />
+              </div>
+              <div className="form-group">
+                <textarea
+                  required
+                  className="text-area-field"
+                  value={notes}
+                  onChange={e => setNotes(e.target.value)}
+                  style={{ height: 150 }}
+                  placeholder="Session Notes"
+                />
+              </div>
+              {submitText === "" ? (
+                <button type="submit" className="btn-primary">
+                  Submit Notes
                 </button>
               ) : (
-                <span>Submit notes above first</span>
+                <h2>{submitText}</h2>
               )}
-            </div>
+            </form>
+          </div>
+          <div className="ticket-detail__bottom">
+            {submitText !== "" && !extraNote ? (
+              <button onClick={handleComplete} className="btn-primary">
+                Mark Complete
+              </button>
+            ) : submitText !== "" && extraNote ? (
+              <button className="btn-primary" onClick={handleComplete}>
+                Back Home
+              </button>
+            ) : (
+              <span>Submit notes above first</span>
+            )}
           </div>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 };
 
 export default withRouter(SessionNotes);

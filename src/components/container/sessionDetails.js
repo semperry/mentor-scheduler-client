@@ -66,6 +66,7 @@ const SessionDetail = props => {
 
     setSelectedMentor("");
     props.clearId();
+    props.filterAssigned(singleSession);
   };
 
   const handleCloseForm = e => {
