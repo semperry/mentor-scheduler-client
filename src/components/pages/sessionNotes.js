@@ -27,12 +27,15 @@ const SessionNotes = props => {
           `https://rec-scheduler-api.herokuapp.com/students/completed/${student._id}`,
           {
             assigned_to: student.assigned_to,
-            last_submitted_by: `${mentor.first_name.toLowerCase()} ${mentor.last_name.toLowerCase()}`
+            last_submitted_by: `${customData.nameCapitalizer(
+              mentor.first_name
+            )} ${customData.nameCapitalizer(mentor.last_name)}`
           }
         )
         .catch(err => {
           console.log("completed err: ", err);
         });
+      props.history.push("/");
     } else {
       axios
         // .post("http://localhost:4000/redis/complete", { id: student._id })
@@ -48,7 +51,9 @@ const SessionNotes = props => {
             `https://rec-scheduler-api.herokuapp.com/students/completed/${student._id}`,
             {
               assigned_to: "",
-              last_submitted_by: `${mentor.first_name.toLowerCase()} ${mentor.last_name.toLowerCase()}`
+              last_submitted_by: `${customData.nameCapitalizer(
+                mentor.first_name
+              )} ${customData.nameCapitalizer(mentor.last_name)}`
             }
           );
         })
