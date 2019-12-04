@@ -1,4 +1,3 @@
-// TODO: Re-render sessions on props.history push because assigned stays after complete
 import React, { useState } from "react";
 import { withRouter } from "react-router";
 import axios from "axios";
@@ -57,11 +56,13 @@ const SessionNotes = props => {
             }
           );
         })
+        .then(() => {
+          props.history.push("/sessions");
+        })
         .catch(err => {
           console.log("completed err: ", err);
         });
     }
-    // props.history.push("/");
   };
 
   const handleSubmitNotes = e => {
