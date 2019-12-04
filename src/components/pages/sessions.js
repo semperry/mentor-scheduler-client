@@ -32,7 +32,10 @@ const Sessions = props => {
         {mentors.map(mentor => {
           let count = 0;
           allSessions.map(session => {
-            session.assigned_to === mentor._id ? count++ : null;
+            session.assigned_to === mentor._id &&
+            session.day.toLowerCase() === currentDay
+              ? count++
+              : null;
           });
 
           return mentor._id === currentUser.id ? (
@@ -176,7 +179,6 @@ const Sessions = props => {
   };
 
   useEffect(() => {
-    console.log(currentUser.id);
     setAssignedCount(
       allSessions.filter(students => {
         return (
@@ -198,7 +200,7 @@ const Sessions = props => {
         : null;
 
     return () => (document.title = "Bottega Scheduler");
-  }, [allSessions, filteredSessions]);
+  }, [allSessions, filteredSessions, currentId]);
 
   useEffect(() => {
     const socket = new WebSocket("wss://rec-scheduler-wss.herokuapp.com");
