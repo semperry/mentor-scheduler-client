@@ -42,3 +42,21 @@
     }
   }
 }
+
+.assigned-count {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-direction: column;
+  width: 100%;
+
+  font-size: 1.5em;
+
+  .active-user-count {
+    color: #00c274;
+    font-weight: 900;
+  }
+
+  .other-user-count {
+  }
+}

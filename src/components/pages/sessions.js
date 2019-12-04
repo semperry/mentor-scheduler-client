@@ -26,6 +26,29 @@ const Sessions = props => {
   const [activeButton, setActiveButton] = useState("");
   const [assignedCount, setAssignedCount] = useState(0);
 
+  const renderAssignedCounter = () => {
+    return (
+      <div className="assigned-count">
+        {mentors.map(mentor => {
+          let count = 0;
+          allSessions.map(session => {
+            session.assigned_to === mentor._id ? count++ : null;
+          });
+
+          return mentor._id === currentUser.id ? (
+            <div key={mentor._id} className="active-user-count">
+              Yours: {count}
+            </div>
+          ) : (
+            <div key={mentor._id} className="other-user-count">
+              {mentor.first_name}: {count}
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
   const filterAssigned = student => {
     setFilteredSessions(
       filteredSessions.filter(session => {
@@ -153,6 +176,7 @@ const Sessions = props => {
   };
 
   useEffect(() => {
+    console.log(currentUser.id);
     setAssignedCount(
       allSessions.filter(students => {
         return (
@@ -272,7 +296,9 @@ const Sessions = props => {
             handleSendMessage={handleSendMessage}
             filterAssigned={filterAssigned}
           />
-        ) : null}
+        ) : (
+          renderAssignedCounter()
+        )}
       </div>
     </div>
   );
