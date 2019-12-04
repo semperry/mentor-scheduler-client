@@ -145,7 +145,7 @@ const SessionDetail = props => {
               pathname: `/student/notes/${id}`,
               state: {
                 student: singleSession,
-                mentor: currentUser
+                currentUser: currentUser
               }
             }}
           >
