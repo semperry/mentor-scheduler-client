@@ -113,6 +113,11 @@
 }
 
 .form-group {
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
   .text-field {
     border-top: 2px solid transparent;
     border-right: 2px solid transparent;

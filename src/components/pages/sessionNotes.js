@@ -1,8 +1,8 @@
-// TODO: Trims and data format pre submission
 // TODO: Re-render sessions on props.history push because assigned stays after complete
 import React, { useState } from "react";
-import { withRouter, Redirect } from "react-router";
+import { withRouter } from "react-router";
 import axios from "axios";
+import customData from "../data";
 
 const SessionNotes = props => {
   const [notes, setNotes] = useState("");
@@ -27,7 +27,7 @@ const SessionNotes = props => {
           `https://rec-scheduler-api.herokuapp.com/students/completed/${student._id}`,
           {
             assigned_to: student.assigned_to,
-            last_submitted_by: `${mentor.first_name} ${mentor.last_name}`
+            last_submitted_by: `${mentor.first_name.toLowerCase()} ${mentor.last_name.toLowerCase()}`
           }
         )
         .catch(err => {
@@ -48,7 +48,7 @@ const SessionNotes = props => {
             `https://rec-scheduler-api.herokuapp.com/students/completed/${student._id}`,
             {
               assigned_to: "",
-              last_submitted_by: `${mentor.first_name} ${mentor.last_name}`
+              last_submitted_by: `${mentor.first_name.toLowerCase()} ${mentor.last_name.toLowerCase()}`
             }
           );
         })
@@ -61,12 +61,14 @@ const SessionNotes = props => {
 
   const handleSubmitNotes = e => {
     const sendNotes = {
-      notes: notes,
-      hours_studied: hours_studied,
-      weekly_goal: weekly_goal,
-      questions: questions,
-      percentage: percentage,
-      submitted_by: `${mentor.first_name} ${mentor.last_name}`
+      notes: notes.trim(),
+      hours_studied: hours_studied.trim(),
+      weekly_goal: weekly_goal.trim(),
+      questions: questions.trim(),
+      percentage: customData.percentSignFormatter(percentage),
+      submitted_by: `${customData.nameCapitalizer(
+        mentor.first_name
+      )} ${customData.nameCapitalizer(mentor.last_name)}`
     };
 
     e.preventDefault();
@@ -111,7 +113,7 @@ const SessionNotes = props => {
               <div className="form-group">
                 <input
                   className="text-field"
-                  type="text"
+                  type="number"
                   value={hours_studied}
                   onChange={e => setHoursStudied(e.target.value)}
                   placeholder="Hours Studied"
@@ -119,7 +121,7 @@ const SessionNotes = props => {
 
                 <input
                   className="text-field"
-                  type="text"
+                  type="number"
                   value={weekly_goal}
                   onChange={e => setWeeklyGoal(e.target.value)}
                   placeholder="Weekly Goal"

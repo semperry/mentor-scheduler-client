@@ -57,6 +57,23 @@ const customData = {
     "9:00pm",
     "9:30pm"
   ],
+
+  percentSignFormatter: string => {
+    return string
+      .trim()
+      .split(" ")
+      .slice(0, 1)
+      .join("");
+  },
+
+  nameCapitalizer: string => {
+    return `${string[0].toUpperCase()}${string
+      .split("")
+      .splice(1)
+      .join("")
+      .toLowerCase()}`;
+  },
+
   // Courtesy Chantay Riggs()
   returnsDataWithSortedTimes: data => {
     const returnNum = stringTime => {
@@ -70,7 +87,8 @@ const customData = {
       else if (
         final.length === 4 &&
         stringTime.includes("p") &&
-        (final[0] != 1 && final[1] != 2)
+        final[0] != 1 &&
+        final[1] != 2
       ) {
       }
       return Number(final.join(""));
